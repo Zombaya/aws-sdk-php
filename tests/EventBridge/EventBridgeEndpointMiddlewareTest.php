@@ -157,7 +157,7 @@ class EventBridgeEndpointMiddlewareTest extends TestCase
             self::fail("this test should have thrown an exception");
         } catch (\Exception $exception) {
             self::assertSame("InvalidArgumentException", get_class($exception));
-            self::assertContains($expectedException, $exception->getMessage());
+            self::assertStringContainsString($expectedException, $exception->getMessage());
         }
     }
 
