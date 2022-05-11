@@ -7,6 +7,7 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\Exception\AwsException;
 use Aws\MockHandler;
 use Aws\Result;
+use Aws\Test\Polyfill\PHPUnit\PHPUnitCompatTrait;
 use Aws\Test\UsesServiceTrait;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Response;
@@ -18,13 +19,13 @@ use PHPUnit\Framework\TestCase;
  */
 class DynamoDbClientTest extends TestCase
 {
+    use PHPUnitCompatTrait;
     use UsesServiceTrait;
 
     public function testRegisterSessionHandlerReturnsHandler()
     {
-        $this->markTestSkipped();
         $client = $this->getTestSdk()->createDynamoDb();
-        $sh = $client->registerSessionHandler(['locking' => true]);
+        @$sh = $client->registerSessionHandler(['locking' => true]);
         $this->assertInstanceOf(
             'Aws\DynamoDb\LockingSessionConnection',
             $this->readAttribute($sh, 'connection')

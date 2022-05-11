@@ -211,6 +211,13 @@
             "2016-08-10": "2016-08-10"
         }
     },
+    "billingconductor": {
+        "namespace": "BillingConductor",
+        "versions": {
+            "latest": "2021-07-30",
+            "2021-07-30": "2021-07-30"
+        }
+    },
     "braket": {
         "namespace": "Braket",
         "versions": {
@@ -237,6 +244,13 @@
         "versions": {
             "latest": "2021-04-20",
             "2021-04-20": "2021-04-20"
+        }
+    },
+    "chime-sdk-media-pipelines": {
+        "namespace": "ChimeSDKMediaPipelines",
+        "versions": {
+            "latest": "2021-07-15",
+            "2021-07-15": "2021-07-15"
         }
     },
     "chime-sdk-meetings": {
@@ -850,6 +864,13 @@
             "2015-10-01": "2015-10-01"
         }
     },
+    "gamesparks": {
+        "namespace": "GameSparks",
+        "versions": {
+            "latest": "2021-08-17",
+            "2021-08-17": "2021-08-17"
+        }
+    },
     "glacier": {
         "namespace": "Glacier",
         "versions": {
@@ -1070,6 +1091,13 @@
     },
     "ivs": {
         "namespace": "IVS",
+        "versions": {
+            "latest": "2020-07-14",
+            "2020-07-14": "2020-07-14"
+        }
+    },
+    "ivschat": {
+        "namespace": "ivschat",
         "versions": {
             "latest": "2020-07-14",
             "2020-07-14": "2020-07-14"
@@ -1521,6 +1549,13 @@
         "versions": {
             "latest": "2018-07-26",
             "2018-07-26": "2018-07-26"
+        }
+    },
+    "pinpoint-sms-voice-v2": {
+        "namespace": "PinpointSMSVoiceV2",
+        "versions": {
+            "latest": "2022-03-31",
+            "2022-03-31": "2022-03-31"
         }
     },
     "pinpoint": {

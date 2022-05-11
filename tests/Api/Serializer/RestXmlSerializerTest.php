@@ -2,6 +2,7 @@
 namespace Aws\Test\Api\Serializer;
 
 use Aws\Api\Serializer\RestXmlSerializer;
+use Aws\Test\Polyfill\PHPUnit\PHPUnitCompatTrait;
 use Aws\Test\UsesServiceTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -10,6 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class RestXmlSerializerTest extends TestCase
 {
+    use PHPUnitCompatTrait;
     use UsesServiceTrait;
 
     private function getRequest($commandName, $input)
@@ -42,7 +44,7 @@ class RestXmlSerializerTest extends TestCase
             ],
         ]);
         $contents = $request->getBody()->getContents();
-        $this->assertContains(
+        $this->assertStringContainsString(
             "<Key>/@/#/=/;/:/ /,/?/&apos;/&quot;/&lt;/&gt;/&amp;/&#13;/&#10;/",
             $contents
         );
@@ -74,5 +76,31 @@ class RestXmlSerializerTest extends TestCase
             'application/xml',
             $request->getHeaderLine('Content-Type')
         );
+    }
+
+    /**
+     * @dataProvider boolProvider
+     * @param bool $arg
+     * @param string $expected
+     */
+    public function testSerializesHeaderValueToBoolString($arg, $expected)
+    {
+        $request = $this->getRequest('PutObject', [
+            'Bucket'      => 'foo',
+            'Key'         => 'bar',
+            'Body'        => 'baz',
+            'BucketKeyEnabled' => $arg,
+        ]);
+        $this->assertSame(
+            $expected,
+            $request->getHeaderLine('x-amz-server-side-encryption-bucket-key-enabled')
+        );
+    }
+
+    public function boolProvider() {
+        return [
+            [true, 'true'],
+            [false, 'false']
+        ];
     }
 }

@@ -1,8 +1,10 @@
 <?php
 namespace Aws\Test\Api;
 
+use Aws\Api\Parser\QueryParser;
 use Aws\Api\Service;
 use Aws\Api\StructureShape;
+use Aws\Test\Polyfill\PHPUnit\PHPUnitCompatTrait;
 use Aws\Test\TestServiceTrait;
 use Aws\Test\UsesServiceTrait;
 use PHPUnit\Framework\TestCase;
@@ -12,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ServiceTest extends TestCase
 {
+    use PHPUnitCompatTrait;
     use UsesServiceTrait;
     use TestServiceTrait;
 
@@ -62,7 +65,7 @@ class ServiceTest extends TestCase
     public function testReturnsMetadata()
     {
         $s = new Service([], function () { return []; });
-        $this->assertInternalType('array', $s->getMetadata());
+        $this->assertIsArray($s->getMetadata());
         $s['metadata'] = [
             'serviceFullName' => 'foo',
             'endpointPrefix'  => 'bar',
@@ -93,11 +96,9 @@ class ServiceTest extends TestCase
         $this->assertArrayHasKey('foo', $s->getOperations());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testEnsuresOperationExists()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $s = new Service([], function () { return []; });
         $s->getOperation('foo');
     }
@@ -158,11 +159,9 @@ class ServiceTest extends TestCase
         $this->assertInstanceOf($cl, Service::createErrorParser($p));
     }
 
-    /**
-     * @expectedException \UnexpectedValueException
-     */
     public function testThrowsOnUnexpectedProtocol()
     {
+        $this->expectException(\UnexpectedValueException::class);
         Service::createErrorParser('undefined_protocol');
     }
 
@@ -180,9 +179,14 @@ class ServiceTest extends TestCase
     /**
      * @dataProvider serializerDataProvider
      */
-    public function testCreatesSerializer($type, $parser)
+    public function testCreatesSerializer($type, $cl)
     {
-
+        $service = new Service(
+            ['metadata' => ['protocol' => $type]],
+            function () { return []; }
+        );
+        $serializer = Service::createSerializer($service, $type);
+        $this->assertInstanceOf($cl, $serializer);
     }
 
     public function parserDataProvider()
@@ -191,16 +195,28 @@ class ServiceTest extends TestCase
             ['json', 'Aws\Api\Parser\JsonRpcParser'],
             ['rest-json', 'Aws\Api\Parser\RestJsonParser'],
             ['rest-xml', 'Aws\Api\Parser\RestXmlParser'],
-            ['query', 'Aws\Api\Parser\XmlParser'],
-            ['ec2', 'Aws\Api\Parser\XmlParser'],
+            ['query', 'Aws\Api\Parser\QueryParser'],
+            ['ec2', 'Aws\Api\Parser\QueryParser'],
         ];
     }
 
     /**
      * @dataProvider parserDataProvider
      */
-    public function testCreatesParsers($type, $parser)
+    public function testCreatesParsers($type, $cl)
     {
+        $service = new Service(
+            ['metadata' => ['protocol' => $type]],
+            function () { return []; }
+        );
+        $parser = Service::createParser($service);
+        $this->assertInstanceOf($cl, $parser);
 
+        if ($parser instanceof QueryParser) {
+            $this->assertInstanceOf(
+                'Aws\Api\Parser\XmlParser',
+                $this->readAttribute($parser, 'parser')
+            );
+        }
     }
 }

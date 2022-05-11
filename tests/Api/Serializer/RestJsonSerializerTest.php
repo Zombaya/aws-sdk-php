@@ -4,6 +4,7 @@ namespace Aws\Test\Api\Serializer;
 use Aws\Api\Service;
 use Aws\Command;
 use Aws\Api\Serializer\RestJsonSerializer;
+use Aws\Test\Polyfill\PHPUnit\PHPUnitCompatTrait;
 use Aws\Test\UsesServiceTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -12,6 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class RestJsonSerializerTest extends TestCase
 {
+    use PHPUnitCompatTrait;
     use UsesServiceTrait;
 
     private function getTestService()
@@ -50,6 +52,10 @@ class RestJsonSerializerTest extends TestCase
                     'noPayload' => [
                         'http' => ['method' => 'GET'],
                         'input' => ['shape' => 'NoPayloadInput']
+                    ],
+                    'boolHeader' => [
+                        'http' => ['method' => 'POST'],
+                        'input' => ['shape' => 'BoolHeaderInput']
                     ]
                 ],
                 'shapes' => [
@@ -117,8 +123,19 @@ class RestJsonSerializerTest extends TestCase
                             ]
                         ]
                     ],
+                    'BoolHeaderInput' => [
+                        'type' => 'structure',
+                        'members' => [
+                            'bool' => [
+                                'shape' => 'BoolShape',
+                                'location' => 'header',
+                                'locationName' => 'Is-Bool',
+                            ],
+                        ]
+                    ],
                     'BlobShape' => ['type' => 'blob'],
-                    'BazShape'  => ['type' => 'string']
+                    'BazShape'  => ['type' => 'string'],
+                    'BoolShape' => ['type' => 'boolean'],
                 ]
             ],
             function () {}
@@ -206,11 +223,9 @@ class RestJsonSerializerTest extends TestCase
         $this->assertSame('', $request->getHeaderLine('Content-Type'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testPreparesRequestsWithJsonValueTraitThrowsException()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $obj = new \stdClass();
         $obj->obj = $obj;
         $this->getRequest('foobar', ['baz' => $obj]);
@@ -308,5 +323,22 @@ class RestJsonSerializerTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider boolProvider
+     * @param bool $arg
+     * @param string $expected
+     */
+    public function testSerializesHeaderValueToBoolString($arg, $expected)
+    {
+        $request = $this->getRequest('boolHeader', ['bool' => $arg]);
+        $this->assertSame($expected, $request->getHeaderLine('Is-Bool'));
+    }
+
+    public function boolProvider() {
+        return [
+            [true, 'true'],
+            [false, 'false']
+        ];
+    }
 }
 
