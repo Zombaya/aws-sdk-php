@@ -2618,9 +2618,8 @@ class AesGcmTest extends TestCase
             $this->markTestSkipped('This test can only run on PHP 7.1');
             return;
         }
-        $ptLen = \random_int(0, 1024);
-        $aadLen = \random_int(0, 1024);
-        $i = 0;
+        $ptLen = \random_int(1, 1024);
+        $aadLen = \random_int(1, 1024);
         $tag1 = $tag2 = '';
         for ($i = 0; $i < 16; ++$i) {
             $plaintext = \random_bytes($ptLen + $i);
