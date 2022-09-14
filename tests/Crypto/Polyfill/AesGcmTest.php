@@ -2637,9 +2637,9 @@ class AesGcmTest extends TestCase
             new Key($key),
             $aad,
             $tag2
-        );
+        ).\random_bytes(2);
 
-        $failureMessage = sprintf("Failed with parameters:\n\tplaintext: %s\n\taad: %s\n\tkey: %s\n\tnonce: %s",
+        $failureMessage = sprintf("Failed with parameters:\n\tplaintext: '%s'\n\taad: '%s'\n\tkey: '%s'\n\tnonce: '%s'",
             bin2hex($plaintext),
             bin2hex($aad),
             bin2hex($key),
@@ -2676,19 +2676,22 @@ class AesGcmTest extends TestCase
             \random_bytes(12),
         ];
 
-        for ($i = 0; $i < 3200; ++$i) {
-            $tag1 = $tag2 = '';
-            $plaintext = $ptLen + $i > 0 ? \random_bytes($ptLen + $i) : '';
-            $aad = $aadLen + $i > 0 ?\random_bytes($aadLen + $i) : '';
-            $key = \random_bytes(32);
-            $nonce = \random_bytes(12);
+        for ($ptLen = 0; $ptLen < 1040; ++$ptLen) {
+            for ($aadLen = 0; $aadLen < 1040; ++$aadLen) {
+                $plaintext = $ptLen > 0 ? \random_bytes($ptLen) : '';
+                $aad = $aadLen > 0 ?\random_bytes($aadLen) : '';
+                $key = \random_bytes(32);
+                $nonce = \random_bytes(12);
 
-            $tests[] = [
-                $plaintext,
-                $aad,
-                $key,
-                $nonce,
-            ];
+                $testName = sprintf('%d-%d',$ptLen,$aadLen);
+
+                $tests[$testName] = [
+                    $plaintext,
+                    $aad,
+                    $key,
+                    $nonce,
+                ];
+            }
         }
 
         return $tests;
