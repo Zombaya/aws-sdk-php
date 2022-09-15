@@ -53,6 +53,7 @@ class ServiceBuilder
     {
         return <<<EOPHP
 <?php
+
 namespace Aws\\{$this->namespace};
 
 use Aws\\AwsClient;
@@ -60,7 +61,9 @@ use Aws\\AwsClient;
 /**
  * This client is used to interact with the **{$this->getFullName()}** service.
  */
-class {$this->namespace}Client extends AwsClient {}
+class {$this->namespace}Client extends AwsClient 
+{
+}
 
 EOPHP;
     }
@@ -69,6 +72,7 @@ EOPHP;
     {
         return <<<EOPHP
 <?php
+
 namespace Aws\\{$this->namespace}\\Exception;
 
 use Aws\\Exception\\AwsException;
@@ -76,7 +80,9 @@ use Aws\\Exception\\AwsException;
 /**
  * Represents an error interacting with the **{$this->getFullName()}** service.
  */
-class {$this->namespace}Exception extends AwsException {}
+class {$this->namespace}Exception extends AwsException 
+{
+}
 
 EOPHP;
     }
