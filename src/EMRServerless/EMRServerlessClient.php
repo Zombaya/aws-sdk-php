@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\EMRServerless;
 
 use Aws\AwsClient;
@@ -13,6 +14,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteApplicationAsync(array $args = [])
  * @method \Aws\Result getApplication(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getApplicationAsync(array $args = [])
+ * @method \Aws\Result getDashboardForJobRun(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getDashboardForJobRunAsync(array $args = [])
  * @method \Aws\Result getJobRun(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getJobRunAsync(array $args = [])
  * @method \Aws\Result listApplications(array $args = [])
@@ -34,4 +37,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateApplication(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateApplicationAsync(array $args = [])
  */
-class EMRServerlessClient extends AwsClient {}
+class EMRServerlessClient extends AwsClient
+{
+}

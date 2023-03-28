@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test;
 
 use Aws\Api\ApiProvider;
@@ -16,6 +17,7 @@ use Aws\S3\S3Client;
 use Aws\Signature\SignatureV4;
 use Aws\Sts\StsClient;
 use Aws\WrappedHttpHandler;
+use Exception;
 use GuzzleHttp\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
@@ -35,7 +37,7 @@ class AwsClientTest extends TestCase
                     'protocol'       => 'query',
                     'endpointPrefix' => 'foo'
                 ],
-                'shapes' => []
+                'shapes' => [],
             ];
         };
     }
@@ -43,14 +45,17 @@ class AwsClientTest extends TestCase
     public function testHasGetters()
     {
         $config = [
-            'handler'      => function () {},
+            'handler'      => function () {
+            },
             'credentials'  => new Credentials('foo', 'bar'),
             'region'       => 'foo',
             'endpoint'     => 'http://us-east-1.foo.amazonaws.com',
-            'serializer'   => function () {},
+            'serializer'   => function () {
+            },
             'api_provider' => $this->getApiProvider(),
             'service'      => 'foo',
-            'error_parser' => function () {},
+            'error_parser' => function () {
+            },
             'version'      => 'latest'
         ];
 
@@ -59,6 +64,9 @@ class AwsClientTest extends TestCase
         $this->assertSame($config['credentials'], $client->getCredentials()->wait());
         $this->assertSame($config['region'], $client->getRegion());
         $this->assertSame('foo', $client->getApi()->getEndpointPrefix());
+        $this->assertisArray($client->getClientBuiltIns());
+        $this->assertIsArray($client->getClientContextParams());
+        $this->assertisArray($client->getEndpointProviderArgs());
     }
 
     public function testEnsuresOperationIsFoundWhenCreatingCommands()
@@ -88,7 +96,8 @@ class AwsClientTest extends TestCase
     {
         $this->expectExceptionMessage("Error executing \"foo\" on \"http://us-east-1.foo.amazonaws.com\"; AWS HTTP error: Baz Bar!");
         $this->expectException(\Aws\S3\Exception\S3Exception::class);
-        $parser = function () {};
+        $parser = function () {
+        };
         $errorParser = new JsonRpcErrorParser();
         $h = new WrappedHttpHandler(
             function () {
@@ -325,7 +334,7 @@ class AwsClientTest extends TestCase
                         }
                     }
 
-                    return new Result;
+                    return new Result();
                 }
             ]
         );
@@ -357,7 +366,7 @@ class AwsClientTest extends TestCase
                         $this->assertTrue($request->hasHeader($signatureHeader));
                     }
                     $this->assertSame('UNSIGNED-PAYLOAD', $request->getHeader('X-Amz-Content-Sha256')[0]);
-                    return new Result;
+                    return new Result();
                 }
             ]
         );
@@ -383,16 +392,17 @@ class AwsClientTest extends TestCase
                     CommandInterface $command,
                     RequestInterface $request
                 ) {
-                    $this->assertStringContainsString('ap-southeast-1/custom-service', $request->getHeader('Authorization')[0]);
-                    return new Result;
+                    $this->assertStringContainsString(
+                        'ap-southeast-1/custom-service',
+                        $request->getHeader('Authorization')[0]
+                    );
+                    return new Result();
                 }
             ]
         );
         $list = $client->getHandlerList();
         $list->appendBuild(function ($handler) {
-            return function (CommandInterface $cmd, RequestInterface $req)
-                use ($handler)
-            {
+            return function (CommandInterface $cmd, RequestInterface $req) use ($handler) {
                 $cmd['@context']['signing_region'] = 'ap-southeast-1';
                 $cmd['@context']['signing_service'] = 'custom-service';
                 return $handler($cmd, $req);
@@ -465,6 +475,82 @@ class AwsClientTest extends TestCase
         );
     }
 
+    public function testUsesV2EndpointProviderByDefault()
+    {
+        $client = new StsClient([
+            'region'  => 'us-west-2',
+            'version' => 'latest'
+        ]);
+
+        $this->assertInstanceOf(
+            'Aws\EndpointV2\EndpointProviderV2',
+            $client->getEndpointProvider()
+        );
+    }
+
+    public function testGetClientBuiltins()
+    {
+        $client = new StsClient([
+            'region'  => 'us-west-2',
+            'version' => 'latest'
+        ]);
+        $expected = [
+            'SDK::Endpoint' => null,
+            'AWS::Region' => 'us-west-2',
+            'AWS::UseFIPS' => false,
+            'AWS::UseDualStack' => false,
+            'AWS::STS::UseGlobalEndpoint' => true,
+        ];
+        $builtIns = $client->getClientBuiltIns();
+        $this->assertEquals(
+            $expected,
+            $builtIns
+        );
+    }
+
+    public function testGetEndpointProviderArgs()
+    {
+        $client = new StsClient([
+            'region'  => 'us-west-2',
+            'version' => 'latest'
+        ]);
+        $expected = [
+            'Endpoint' => null,
+            'Region' => 'us-west-2',
+            'UseFIPS' => false,
+            'UseDualStack' => false,
+            'UseGlobalEndpoint' => true,
+        ];
+        $providerArgs = $client->getEndpointProviderArgs();
+        $this->assertEquals(
+            $expected,
+            $providerArgs
+        );
+    }
+
+    public function testIsUseGlobalEndpoint()
+    {
+        $client = new StsClient([
+            'region'  => 'us-west-2',
+            'version' => 'latest',
+            'sts_regional_endpoints' => 'legacy'
+        ]);
+        $providerArgs = $client->getEndpointProviderArgs();
+        $this->assertTrue(
+            $providerArgs['UseGlobalEndpoint']
+        );
+
+        $client = new S3Client([
+            'region'  => 'us-east-1',
+            'version' => 'latest',
+            's3_us_east_1_regional_endpoint' => 'regional'
+        ]);
+        $providerArgs = $client->getEndpointProviderArgs();
+        $this->assertFalse(
+            $providerArgs['UseGlobalEndpoint']
+        );
+    }
+
     private function createHttpsEndpointClient(array $service = [], array $config = [])
     {
         $apiProvider = function () use ($service) {
@@ -480,7 +566,8 @@ class AwsClientTest extends TestCase
             'region'       => 'foo',
             'service'      => 'foo',
             'api_provider' => $apiProvider,
-            'error_parser' => function () {},
+            'error_parser' => function () {
+            },
             'version'      => 'latest'
         ]);
     }
@@ -513,8 +600,105 @@ class AwsClientTest extends TestCase
             'region'       => 'foo',
             'service'      => 'foo',
             'api_provider' => $apiProvider,
-            'error_parser' => function () {},
+            'error_parser' => function () {
+            },
             'version'      => 'latest'
         ]);
+    }
+
+    public function testThrowsDeprecationWarning()
+    {
+        $storeEnvVariable = getenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING');
+        $storeEnvArrayVariable = isset($_ENV['AWS_SUPPRESS_PHP_DEPRECATION_WARNING']) ? $_ENV['AWS_SUPPRESS_PHP_DEPRECATION_WARNING'] : '';
+        $storeServerArrayVariable = isset($_SERVER['AWS_SUPPRESS_PHP_DEPRECATION_WARNING']) ? $_SERVER['AWS_SUPPRESS_PHP_DEPRECATION_WARNING'] : '';
+        putenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING');
+        unset($_ENV['AWS_SUPPRESS_PHP_DEPRECATION_WARNING']);
+        unset($_SERVER['AWS_SUPPRESS_PHP_DEPRECATION_WARNING']);
+        $expectsDeprecation = PHP_VERSION_ID < 70205;
+        if ($expectsDeprecation) {
+            try {
+                set_error_handler(function ($e, $message) {
+                    $this->assertStringContainsString("This installation of the SDK is using PHP version", $message);
+                    $this->assertEquals($e, E_USER_DEPRECATED);
+                    throw new Exception("This test successfully triggered the deprecation");
+                });
+                $client = new StsClient([
+                    'region'  => 'us-west-2',
+                    'version' => 'latest'
+                ]);
+                $this->fail("This test should have thrown the deprecation");
+            } catch (Exception $exception) {
+            } finally {
+                putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
+                restore_error_handler();
+            }
+        } else {
+            $client = new StsClient([
+                'region'  => 'us-west-2',
+                'version' => 'latest'
+            ]);
+            $this->assertTrue(true);
+        }
+        putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
+        if (!empty($storeEnvArrayVariable)) {
+            $_ENV['AWS_SUPPRESS_PHP_DEPRECATION_WARNING'] = $storeEnvArrayVariable;
+        }
+        if (!empty($storeServerArrayVariable)) {
+            $_SERVER['AWS_SUPPRESS_PHP_DEPRECATION_WARNING'] = $storeServerArrayVariable;
+        }
+    }
+
+    public function testCanDisableWarningWithClientConfig()
+    {
+        $storeEnvVariable = getenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING');
+        putenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING');
+        $expectsDeprecation = PHP_VERSION_ID < 70205;
+        if ($expectsDeprecation) {
+            try {
+                set_error_handler(function ($e, $message) {
+                    $this->assertStringNotContainsString("This installation of the SDK is using PHP version", $message);
+                });
+                $client = new StsClient([
+                    'region'  => 'us-west-2',
+                    'version' => 'latest',
+                    'suppress_php_deprecation_warning' => true
+                ]);
+                restore_error_handler();
+            } catch (Exception $exception) {
+                restore_error_handler();
+                $this->fail("This test should not have thrown the deprecation");
+            }
+        } else {
+            putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
+            $this->markTestSkipped();
+        }
+        putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
+    }
+
+    public function testCanDisableWarningWithEnvVar()
+    {
+        $storeEnvVariable = getenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING');
+        putenv('AWS_SUPPRESS_PHP_DEPRECATION_WARNING=true');
+        $expectsDeprecation = PHP_VERSION_ID < 70205;
+        if ($expectsDeprecation) {
+            try {
+                set_error_handler(function ($e, $message) {
+                    echo "hi";
+                    $this->assertStringNotContainsString("This installation of the SDK is using PHP version", $message);
+                });
+                $client = new StsClient([
+                    'region'  => 'us-west-2',
+                    'version' => 'latest'
+                ]);
+                restore_error_handler();
+            } catch (Exception $exception) {
+                restore_error_handler();
+                $this->fail("This test should not have thrown the deprecation");
+            }
+        } else {
+            putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
+            $this->markTestSkipped();
+        }
+        putenv("AWS_SUPPRESS_PHP_DEPRECATION_WARNING={$storeEnvVariable}");
     }
 }

@@ -17,11 +17,13 @@ use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use JmesPath;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Defines application features from the specific context.
  */
-class ConcurrencyContext extends \PHPUnit_Framework_Assert implements
+class ConcurrencyContext extends TestCase implements
     Context,
     SnippetAcceptingContext
 {
@@ -92,7 +94,8 @@ class ConcurrencyContext extends \PHPUnit_Framework_Assert implements
     public function theValueAtShouldBeA($key, $type)
     {
         $this->assertInstanceOf(Result::class, $this->result);
-        $this->assertInternalType($type, $this->result->search($key));
+        $methodName = 'assertIs' . ucfirst($type);
+        $this->$methodName($this->result->search($key));
     }
 
     /**
@@ -167,7 +170,7 @@ class ConcurrencyContext extends \PHPUnit_Framework_Assert implements
     public function thereShouldBeValueAt($count, $path)
     {
         $this->assertCount((int) $count, array_unique(
-                JmesPath\search($path, $this->result)
+            JmesPath\search($path, $this->result)
         ));
     }
 }

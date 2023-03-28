@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\WorkMail;
 
 use Aws\AwsClient;
@@ -9,6 +10,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise associateDelegateToResourceAsync(array $args = [])
  * @method \Aws\Result associateMemberToGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise associateMemberToGroupAsync(array $args = [])
+ * @method \Aws\Result assumeImpersonationRole(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise assumeImpersonationRoleAsync(array $args = [])
  * @method \Aws\Result cancelMailboxExportJob(array $args = [])
  * @method \GuzzleHttp\Promise\Promise cancelMailboxExportJobAsync(array $args = [])
  * @method \Aws\Result createAlias(array $args = [])
@@ -17,6 +20,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise createAvailabilityConfigurationAsync(array $args = [])
  * @method \Aws\Result createGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createGroupAsync(array $args = [])
+ * @method \Aws\Result createImpersonationRole(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise createImpersonationRoleAsync(array $args = [])
  * @method \Aws\Result createMobileDeviceAccessRule(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createMobileDeviceAccessRuleAsync(array $args = [])
  * @method \Aws\Result createOrganization(array $args = [])
@@ -35,6 +40,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteEmailMonitoringConfigurationAsync(array $args = [])
  * @method \Aws\Result deleteGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteGroupAsync(array $args = [])
+ * @method \Aws\Result deleteImpersonationRole(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deleteImpersonationRoleAsync(array $args = [])
  * @method \Aws\Result deleteMailboxPermissions(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteMailboxPermissionsAsync(array $args = [])
  * @method \Aws\Result deleteMobileDeviceAccessOverride(array $args = [])
@@ -75,6 +82,10 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getAccessControlEffectAsync(array $args = [])
  * @method \Aws\Result getDefaultRetentionPolicy(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getDefaultRetentionPolicyAsync(array $args = [])
+ * @method \Aws\Result getImpersonationRole(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getImpersonationRoleAsync(array $args = [])
+ * @method \Aws\Result getImpersonationRoleEffect(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getImpersonationRoleEffectAsync(array $args = [])
  * @method \Aws\Result getMailDomain(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getMailDomainAsync(array $args = [])
  * @method \Aws\Result getMailboxDetails(array $args = [])
@@ -93,6 +104,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listGroupMembersAsync(array $args = [])
  * @method \Aws\Result listGroups(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listGroupsAsync(array $args = [])
+ * @method \Aws\Result listImpersonationRoles(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listImpersonationRolesAsync(array $args = [])
  * @method \Aws\Result listMailDomains(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listMailDomainsAsync(array $args = [])
  * @method \Aws\Result listMailboxExportJobs(array $args = [])
@@ -143,6 +156,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise updateAvailabilityConfigurationAsync(array $args = [])
  * @method \Aws\Result updateDefaultMailDomain(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateDefaultMailDomainAsync(array $args = [])
+ * @method \Aws\Result updateImpersonationRole(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise updateImpersonationRoleAsync(array $args = [])
  * @method \Aws\Result updateMailboxQuota(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateMailboxQuotaAsync(array $args = [])
  * @method \Aws\Result updateMobileDeviceAccessRule(array $args = [])
@@ -152,4 +167,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateResourceAsync(array $args = [])
  */
-class WorkMailClient extends AwsClient {}
+class WorkMailClient extends AwsClient
+{
+}

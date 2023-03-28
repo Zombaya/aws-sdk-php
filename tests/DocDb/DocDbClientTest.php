@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Rds;
 
 use Aws\CommandInterface;
@@ -7,12 +8,13 @@ use Aws\DocDB\DocDBClient;
 use Aws\Result;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 use Psr\Http\Message\RequestInterface;
+
 require_once __DIR__ . '/../Signature/sig_hack.php';
 
 /**
  * @covers Aws\DocDB\DocDBClient
  */
-class DocDbClientTestClientTest extends TestCase
+class DocDbClientTest extends TestCase
 {
     public static function set_up_before_class()
     {
@@ -66,12 +68,12 @@ class DocDbClientTestClientTest extends TestCase
                 $url = $cmd['PreSignedUrl'];
                 if (!empty($expectedUrl)) {
                     self::assertSame($expectedUrl, $url);
-                } else if (!empty($expectedSignature)) {
+                } elseif (!empty($expectedSignature)) {
                     $this->assertStringContainsString("X-Amz-Signature={$expectedSignature}", $url);
                 } else {
                     self::assertNull($url);
                 }
-                return new Result;
+                return new Result();
             }
         ]);
 
@@ -85,4 +87,3 @@ class DocDbClientTestClientTest extends TestCase
         call_user_func([$docDb, $functionName], $functionArgs);
     }
 }
-

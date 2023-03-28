@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Credentials;
 
 use Aws\Credentials\Credentials;
@@ -22,7 +23,7 @@ use Psr\Http\Message\RequestInterface;
  */
 class InstanceProfileProviderTest extends TestCase
 {
-    static $originalFlag;
+    public static $originalFlag;
 
     public static function set_up_before_class()
     {
@@ -358,11 +359,15 @@ class InstanceProfileProviderTest extends TestCase
             new Response(200, [], Psr7\Utils::streamFor('MockProfile'))
         );
         $promiseCreds = Promise\Create::promiseFor(
-            new Response(200, [], Psr7\Utils::streamFor(
-                json_encode(call_user_func_array(
-                    [$this, 'getCredentialArray'],
-                    $creds
-                )))
+            new Response(
+                200,
+                [],
+                Psr7\Utils::streamFor(
+                    json_encode(call_user_func_array(
+                        [$this, 'getCredentialArray'],
+                        $creds
+                    ))
+                )
             )
         );
         $promiseBadJsonCreds = Promise\Create::promiseFor(
@@ -829,7 +834,8 @@ class InstanceProfileProviderTest extends TestCase
             ) {
                 if ($reqNumber === 1) {
                     return Promise\Create::rejectionFor([
-                        'exception' => new RequestException('404 Not Found',
+                        'exception' => new RequestException(
+                            '404 Not Found',
                             $putRequest,
                             new $responseClass(404)
                         )
@@ -983,17 +989,17 @@ class InstanceProfileProviderTest extends TestCase
      */
     public function testExtendsExpirationAndSendsRequestIfImdsYieldsExpiredCreds($client)
     {
-        //Capture extension message
-        $capture = tmpfile();
-        ini_set('error_log', stream_get_meta_data($capture)['uri']);
+        //expect warning emitted from extension
+        $this->expectWarning();
+        $this->expectWarningMessageMatches(
+            '/Attempting credential expiration extension/'
+        );
 
         $provider = new InstanceProfileProvider([
             'client' => $client
         ]);
         $creds = $provider()->wait();
 
-        $message = stream_get_contents($capture);
-        $this->assertMatchesRegularExpression('/Attempting credential expiration extension/', $message);
         $this->assertSame('foo', $creds->getAccessKeyId());
         $this->assertSame('baz', $creds->getSecretKey());
         $this->assertFalse($creds->isExpired());
@@ -1015,7 +1021,7 @@ class InstanceProfileProviderTest extends TestCase
         $result = $s3Client->listBuckets();
 
         $this->assertEquals('Request sent', $result['message']);
-        $this->assertLessThanOrEqual(3,$this->getPropertyValue($provider,'attempts'));
+        $this->assertLessThanOrEqual(3, $this->getPropertyValue($provider, 'attempts'));
     }
 
     public function returnsExpiredCredsProvider()
@@ -1024,11 +1030,15 @@ class InstanceProfileProviderTest extends TestCase
         $expiredCreds = ['foo', 'baz', null, "@{$expiredTime}"];
 
         $promiseCreds = Promise\Create::promiseFor(
-            new Response(200, [], Psr7\Utils::streamFor(
-                json_encode(call_user_func_array(
-                    [$this, 'getCredentialArray'],
-                    $expiredCreds
-                )))
+            new Response(
+                200,
+                [],
+                Psr7\Utils::streamFor(
+                    json_encode(call_user_func_array(
+                        [$this, 'getCredentialArray'],
+                        $expiredCreds
+                    ))
+                )
             )
         );
 
@@ -1065,9 +1075,11 @@ class InstanceProfileProviderTest extends TestCase
      */
     public function testExtendsExpirationAndSendsRequestIfImdsUnavailable($client)
     {
-        //Capture extension message
-        $capture = tmpfile();
-        ini_set('error_log', stream_get_meta_data($capture)['uri']);
+        //expect warning emitted from extension
+        $this->expectWarning();
+        $this->expectWarningMessageMatches(
+            '/Attempting credential expiration extension/'
+        );
 
         $expiredTime = time() - 1000;
         $expiredCreds = new Credentials('foo', 'baz', null, $expiredTime);
@@ -1077,9 +1089,6 @@ class InstanceProfileProviderTest extends TestCase
             'client' => $client
         ]);
         $creds = $provider($expiredCreds)->wait();
-
-        $message = stream_get_contents($capture);
-        $this->assertMatchesRegularExpression('/Attempting credential expiration extension/', $message);
         $this->assertSame('foo', $creds->getAccessKeyId());
         $this->assertSame('baz', $creds->getSecretKey());
         $this->assertFalse($expiredCreds->isExpired());
@@ -1101,7 +1110,7 @@ class InstanceProfileProviderTest extends TestCase
         $result = $s3Client->listBuckets();
 
         $this->assertEquals('Request sent', $result['message']);
-        $this->assertLessThanOrEqual(3,$this->getPropertyValue($provider,'attempts'));
+        $this->assertLessThanOrEqual(3, $this->getPropertyValue($provider, 'attempts'));
     }
 
     public function imdsUnavailableProvider()

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Ecs;
 
 use Aws\AwsClient;
@@ -24,6 +25,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteClusterAsync(array $args = [])
  * @method \Aws\Result deleteService(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteServiceAsync(array $args = [])
+ * @method \Aws\Result deleteTaskDefinitions(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deleteTaskDefinitionsAsync(array $args = [])
  * @method \Aws\Result deleteTaskSet(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteTaskSetAsync(array $args = [])
  * @method \Aws\Result deregisterContainerInstance(array $args = [])
@@ -48,6 +51,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise discoverPollEndpointAsync(array $args = [])
  * @method \Aws\Result executeCommand(array $args = [])
  * @method \GuzzleHttp\Promise\Promise executeCommandAsync(array $args = [])
+ * @method \Aws\Result getTaskProtection(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getTaskProtectionAsync(array $args = [])
  * @method \Aws\Result listAccountSettings(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listAccountSettingsAsync(array $args = [])
  * @method \Aws\Result listAttributes(array $args = [])
@@ -58,6 +63,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listContainerInstancesAsync(array $args = [])
  * @method \Aws\Result listServices(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listServicesAsync(array $args = [])
+ * @method \Aws\Result listServicesByNamespace(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listServicesByNamespaceAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result listTaskDefinitionFamilies(array $args = [])
@@ -108,7 +115,11 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise updateServiceAsync(array $args = [])
  * @method \Aws\Result updateServicePrimaryTaskSet(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateServicePrimaryTaskSetAsync(array $args = [])
+ * @method \Aws\Result updateTaskProtection(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise updateTaskProtectionAsync(array $args = [])
  * @method \Aws\Result updateTaskSet(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateTaskSetAsync(array $args = [])
  */
-class EcsClient extends AwsClient {}
+class EcsClient extends AwsClient
+{
+}

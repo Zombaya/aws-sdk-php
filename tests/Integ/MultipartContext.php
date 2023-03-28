@@ -16,7 +16,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\NoSeekStream;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -59,7 +59,7 @@ class MultipartContext implements Context, SnippetAcceptingContext
             'Key' => $filename,
             'Body' => 'foo'
         ]);
-        $ex = $this->s3Client->getObject( [
+        $ex = $this->s3Client->getObject([
             'Bucket' => self::getResourceName(),
             'Key' => $filename])['Body'];
     }
@@ -166,7 +166,8 @@ class MultipartContext implements Context, SnippetAcceptingContext
                 'Bucket' => self::getResourceName(),
                 'Key' => $filename . '-copy',
             ])['Body']->getContents()
-        );    }
+        );
+    }
 
     /**
      * @Given I have a non-seekable read stream

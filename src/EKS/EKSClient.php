@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\EKS;
 
 use Aws\AwsClient;
@@ -29,6 +30,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deregisterClusterAsync(array $args = [])
  * @method \Aws\Result describeAddon(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeAddonAsync(array $args = [])
+ * @method \Aws\Result describeAddonConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeAddonConfigurationAsync(array $args = [])
  * @method \Aws\Result describeAddonVersions(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeAddonVersionsAsync(array $args = [])
  * @method \Aws\Result describeCluster(array $args = [])
@@ -74,4 +77,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateNodegroupVersion(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateNodegroupVersionAsync(array $args = [])
  */
-class EKSClient extends AwsClient {}
+class EKSClient extends AwsClient
+{
+}

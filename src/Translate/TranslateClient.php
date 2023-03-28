@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Translate;
 
 use Aws\AwsClient;
@@ -23,6 +24,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listLanguagesAsync(array $args = [])
  * @method \Aws\Result listParallelData(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listParallelDataAsync(array $args = [])
+ * @method \Aws\Result listTagsForResource(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result listTerminologies(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTerminologiesAsync(array $args = [])
  * @method \Aws\Result listTextTranslationJobs(array $args = [])
@@ -31,9 +34,15 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise startTextTranslationJobAsync(array $args = [])
  * @method \Aws\Result stopTextTranslationJob(array $args = [])
  * @method \GuzzleHttp\Promise\Promise stopTextTranslationJobAsync(array $args = [])
+ * @method \Aws\Result tagResource(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result translateText(array $args = [])
  * @method \GuzzleHttp\Promise\Promise translateTextAsync(array $args = [])
+ * @method \Aws\Result untagResource(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise untagResourceAsync(array $args = [])
  * @method \Aws\Result updateParallelData(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateParallelDataAsync(array $args = [])
  */
-class TranslateClient extends AwsClient {}
+class TranslateClient extends AwsClient
+{
+}

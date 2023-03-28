@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\AppRegistry;
 
 use Aws\AwsClient;
@@ -27,6 +28,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getAssociatedResourceAsync(array $args = [])
  * @method \Aws\Result getAttributeGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getAttributeGroupAsync(array $args = [])
+ * @method \Aws\Result getConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getConfigurationAsync(array $args = [])
  * @method \Aws\Result listApplications(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listApplicationsAsync(array $args = [])
  * @method \Aws\Result listAssociatedAttributeGroups(array $args = [])
@@ -39,6 +42,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listAttributeGroupsForApplicationAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
+ * @method \Aws\Result putConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise putConfigurationAsync(array $args = [])
  * @method \Aws\Result syncResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise syncResourceAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
@@ -50,4 +55,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateAttributeGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateAttributeGroupAsync(array $args = [])
  */
-class AppRegistryClient extends AwsClient {}
+class AppRegistryClient extends AwsClient
+{
+}

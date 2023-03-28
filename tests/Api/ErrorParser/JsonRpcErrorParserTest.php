@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Api\ErrorParser;
 
 use Aws\Api\ErrorParser\JsonRpcErrorParser;
@@ -37,7 +38,7 @@ class JsonRpcErrorParserTest extends TestCase
             count($expected),
             $parsed
         );
-        foreach($parsed as $key => $value) {
+        foreach ($parsed as $key => $value) {
             if ($key === 'error_shape') {
                 $this->assertEquals(
                     $expected['error_shape']->toArray(),
@@ -52,6 +53,10 @@ class JsonRpcErrorParserTest extends TestCase
     public function errorResponsesProvider()
     {
         $service = $this->generateTestService('json');
+        $awsQueryCompatibleService = $this->generateTestService(
+            'json',
+            ['awsQueryCompatible' => true]
+        );
         $shapes = $service->getErrorShapes();
         $errorShape = $shapes[0];
         $client = $this->generateTestClient($service);
@@ -133,6 +138,66 @@ class JsonRpcErrorParserTest extends TestCase
                         'notmodeled'    => 'bar',
                         'message'       => 'Test Message',
                         '__type'        => 'NonExistentException',
+                    ],
+                    'body' => [],
+                ]
+            ],
+            // read Error code in query error header
+            [
+                "HTTP/1.1 400 Bad Request\r\n" .
+                "x-amzn-requestid: xyz\r\n" .
+                "x-amzn-query-error: NonExistentException;Sender\r\n\r\n" .
+                '{ "__Type": "foo", "Message": "lorem ipsum" }',
+                null,
+                new JsonRpcErrorParser($awsQueryCompatibleService),
+                [
+                    'code'       => 'NonExistentException',
+                    'message'    => 'lorem ipsum',
+                    'type'       => 'Sender',
+                    'request_id' => 'xyz',
+                    'parsed'     => [
+                        'message' => 'lorem ipsum',
+                        '__type'    => 'foo'
+                    ],
+                    'body' => [],
+                ]
+            ],
+            // read error code in body when query error is incomplete
+            [
+                "HTTP/1.1 400 Bad Request\r\n" .
+                "x-amzn-requestid: xyz\r\n" .
+                "x-amzn-query-error: ;Sender\r\n\r\n" .
+                '{ "__Type": "foo", "Message": "lorem ipsum" }',
+                null,
+                new JsonRpcErrorParser($awsQueryCompatibleService),
+                [
+                    'code'       => 'foo',
+                    'message'    => 'lorem ipsum',
+                    'type'       => 'client',
+                    'request_id' => 'xyz',
+                    'parsed'     => [
+                        'message' => 'lorem ipsum',
+                        '__type'    => 'foo'
+                    ],
+                    'body' => [],
+                ]
+            ],
+            // read error code in body when query error is null or empty
+            [
+                "HTTP/1.1 400 Bad Request\r\n" .
+                "x-amzn-requestid: xyz\r\n" .
+                "x-amzn-query-error: \r\n\r\n" .
+                '{ "__Type": "foo", "Message": "lorem ipsum" }',
+                null,
+                new JsonRpcErrorParser(),
+                [
+                    'code'       => 'foo',
+                    'message'    => 'lorem ipsum',
+                    'type'       => 'client',
+                    'request_id' => 'xyz',
+                    'parsed'     => [
+                        'message' => 'lorem ipsum',
+                        '__type'    => 'foo'
                     ],
                     'body' => [],
                 ]

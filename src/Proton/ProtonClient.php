@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Proton;
 
 use Aws\AwsClient;
@@ -71,6 +72,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getRepositoryAsync(array $args = [])
  * @method \Aws\Result getRepositorySyncStatus(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getRepositorySyncStatusAsync(array $args = [])
+ * @method \Aws\Result getResourcesSummary(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getResourcesSummaryAsync(array $args = [])
  * @method \Aws\Result getService(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getServiceAsync(array $args = [])
  * @method \Aws\Result getServiceInstance(array $args = [])
@@ -156,4 +159,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateTemplateSyncConfig(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateTemplateSyncConfigAsync(array $args = [])
  */
-class ProtonClient extends AwsClient {}
+class ProtonClient extends AwsClient
+{
+}

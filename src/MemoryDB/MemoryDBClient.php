@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\MemoryDB;
 
 use Aws\AwsClient;
@@ -45,6 +46,10 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise describeParameterGroupsAsync(array $args = [])
  * @method \Aws\Result describeParameters(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeParametersAsync(array $args = [])
+ * @method \Aws\Result describeReservedNodes(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeReservedNodesAsync(array $args = [])
+ * @method \Aws\Result describeReservedNodesOfferings(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeReservedNodesOfferingsAsync(array $args = [])
  * @method \Aws\Result describeServiceUpdates(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeServiceUpdatesAsync(array $args = [])
  * @method \Aws\Result describeSnapshots(array $args = [])
@@ -59,6 +64,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listAllowedNodeTypeUpdatesAsync(array $args = [])
  * @method \Aws\Result listTags(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsAsync(array $args = [])
+ * @method \Aws\Result purchaseReservedNodesOffering(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise purchaseReservedNodesOfferingAsync(array $args = [])
  * @method \Aws\Result resetParameterGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise resetParameterGroupAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
@@ -76,4 +83,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateUser(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateUserAsync(array $args = [])
  */
-class MemoryDBClient extends AwsClient {}
+class MemoryDBClient extends AwsClient
+{
+}

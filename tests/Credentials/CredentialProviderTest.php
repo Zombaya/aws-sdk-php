@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Credentials;
 
 use Aws\Api\DateTimeResult;
@@ -6,20 +7,24 @@ use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;
 use Aws\History;
 use Aws\LruArrayCache;
-use Aws\Middleware;
 use Aws\Result;
-use Aws\Sts\StsClient;
+use Aws\Token\SsoTokenProvider;
 use GuzzleHttp\Promise;
 use Aws\Test\UsesServiceTrait;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
-
 
 /**
  * @covers \Aws\Credentials\CredentialProvider
  */
 class CredentialProviderTest extends TestCase
 {
-    private $home, $homedrive, $homepath, $key, $secret, $profile;
+    use UsesServiceTrait;
+    private $home;
+    private $homedrive;
+    private $homepath;
+    private $key;
+    private $secret;
+    private $profile;
 
     private static $standardIni = <<<EOT
 [default]
@@ -27,8 +32,6 @@ aws_access_key_id = foo
 aws_secret_access_key = bar
 aws_session_token = baz
 EOT;
-
-    use UsesServiceTrait;
 
     private function clearEnv()
     {
@@ -87,7 +90,7 @@ EOT;
 
     public function testCreatesFromCache()
     {
-        $cache = new LruArrayCache;
+        $cache = new LruArrayCache();
         $key = __CLASS__ . 'credentialsCache';
         $saved = new Credentials('foo', 'bar', 'baz', PHP_INT_MAX);
         $cache->set($key, $saved, $saved->getExpiration() - time());
@@ -109,7 +112,7 @@ EOT;
 
     public function testRefreshesCacheWhenCredsExpired()
     {
-        $cache = new LruArrayCache;
+        $cache = new LruArrayCache();
         $key = __CLASS__ . 'credentialsCache';
         $saved = new Credentials('foo', 'bar', 'baz', time() - 1);
         $cache->set($key, $saved);
@@ -130,7 +133,7 @@ EOT;
 
     public function testPersistsToCache()
     {
-        $cache = new LruArrayCache;
+        $cache = new LruArrayCache();
         $key = __CLASS__ . 'credentialsCache';
         $creds = new Credentials('foo', 'bar', 'baz', PHP_INT_MAX);
 
@@ -788,7 +791,7 @@ EOT;
                 $dir . '/credentials',
                 []
             ))->wait();
-        }  finally {
+        } finally {
             unlink($dir . '/credentials');
         }
     }
@@ -1013,7 +1016,7 @@ EOT;
     }
 
 
-    public function testSsoProfileProvider()
+    public function testLegacySsoProfileProvider()
     {
         $dir = $this->clearEnv();
         $expiration = DateTimeResult::fromEpoch(time() + 1000);
@@ -1037,9 +1040,10 @@ EOT;
         }
         $tokenFileName = $tokenFileDirectory . sha1("url.co.uk") . '.json';
         file_put_contents(
-            $tokenFileName, $tokenFile
+            $tokenFileName,
+            $tokenFile
         );
-        putenv('HOME=' . dirname($dir));
+
         $configFilename = $dir . '/config';
         putenv('HOME=' . dirname($dir));
 
@@ -1078,6 +1082,88 @@ EOT;
         }
     }
 
+    public function testSsoProfileProviderWithNewFileFormat()
+    {
+        $dir = $this->clearEnv();
+        $expiration = time() + 1000;
+        $ini = <<<EOT
+[default]
+sso_account_id = 12345
+sso_session = session-name
+sso_role_name = roleName
+
+[sso-session session-name]
+sso_start_url = url.co.uk
+sso_region = us-west-2
+
+
+EOT;
+        $tokenFile = <<<EOT
+{
+    "startUrl": "https://d-123.awsapps.com/start",
+    "region": "us-west-2",
+    "accessToken": "token",
+    "expiresAt": "2500-12-25T21:30:00Z"
+}
+EOT;
+
+        putenv('HOME=' . dirname($dir));
+
+        $configFilename = $dir . '/config';
+        file_put_contents($configFilename, $ini);
+
+        $tokenFileDirectory = $dir . "/sso/cache/";
+        if (!is_dir($tokenFileDirectory)) {
+            mkdir($tokenFileDirectory, 0777, true);
+        }
+        $tokenLocation = SsoTokenProvider::getTokenLocation('session-name');
+        if (!is_dir(dirname($tokenLocation))) {
+            mkdir(dirname($tokenLocation), 0777, true);
+        }
+        file_put_contents(
+            $tokenLocation,
+            $tokenFile
+        );
+
+        $configFilename = $dir . '/config';
+
+        $result = [
+            'roleCredentials' => [
+                'accessKeyId'     => 'foo',
+                'secretAccessKey' => 'assumedSecret',
+                'sessionToken'    => null,
+                'expiration'      => $expiration
+            ],
+        ];
+
+        $sso = $this->getTestClient('Sso', ['credentials' => false]);
+        $this->addMockResults($sso, [
+            new Result($result)
+        ]);
+
+        try {
+            $creds = call_user_func(CredentialProvider::sso(
+                'default',
+                $configFilename,
+                [
+                    'ssoClient' => $sso
+                ]
+            ))->wait();
+            $this->assertSame('foo', $creds->getAccessKeyId());
+            $this->assertSame('assumedSecret', $creds->getSecretKey());
+            $this->assertNull($creds->getSecurityToken());
+            $this->assertGreaterThan(
+                DateTimeResult::fromEpoch(time())->getTimestamp(),
+                $creds->getExpiration()
+            );
+        } finally {
+            unlink($dir . '/config');
+            unlink($tokenLocation);
+            rmdir($tokenFileDirectory);
+            rmdir($dir . "/sso/");
+        }
+    }
+
 
     public function testSsoProfileProviderAddedToDefaultChain()
     {
@@ -1103,9 +1189,10 @@ EOT;
         }
         $tokenFileName = $tokenFileDirectory . sha1("url.co.uk") . '.json';
         file_put_contents(
-            $tokenFileName, $tokenFile
+            $tokenFileName,
+            $tokenFile
         );
-        putenv('HOME=' . dirname($dir));
+
         $configFilename = $dir . '/config';
         putenv('HOME=' . dirname($dir));
 
@@ -1167,9 +1254,10 @@ EOT;
         }
         $tokenFileName = $tokenFileDirectory . sha1("url.co.uk") . '.json';
         file_put_contents(
-            $tokenFileName, $tokenFile
+            $tokenFileName,
+            $tokenFile
         );
-        putenv('HOME=' . dirname($dir));
+
         $configFilename = $dir . '/config';
         putenv('HOME=' . dirname($dir));
 
@@ -1226,7 +1314,8 @@ EOT;
         }
         $tokenFileName = $tokenFileDirectory . sha1("url.co.uk") . '.json';
         file_put_contents(
-            $tokenFileName, $tokenFile
+            $tokenFileName,
+            $tokenFile
         );
         putenv('HOME=' . dirname($dir));
         $configFilename = $dir . '/config';
@@ -1270,7 +1359,26 @@ EOT;
         putenv('HOME=' . dirname($dir));
 
         call_user_func(CredentialProvider::sso('default', $filename))->wait();
+    }
 
+    public function testSsoProfileProviderFailsWithBadSsoSessionName()
+    {
+        $this->expectExceptionMessage("Could not find sso-session fakeSessionName in");
+        $this->expectException(\Aws\Exception\CredentialsException::class);
+        $dir = $this->clearEnv();
+        $ini = <<<EOT
+[default]
+sso_session = fakeSessionName
+EOT;
+        $filename = $dir . '/config';
+        file_put_contents($filename, $ini);
+        putenv('HOME=' . dirname($dir));
+
+        try {
+            call_user_func(CredentialProvider::sso('default', $filename))->wait();
+        } finally {
+            unlink($dir . '/config');
+        }
     }
 
     public function testSsoProfileProviderMissingData()
@@ -1772,8 +1880,10 @@ EOT;
         foreach ($cacheable as $provider) {
             $this->clearEnv();
 
-            if ($provider == 'ecs') putenv('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/latest');
-            $cache = new LruArrayCache;
+            if ($provider == 'ecs') {
+                putenv('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI=/latest');
+            }
+            $cache = new LruArrayCache();
             $cache->set('aws_cached_' . $provider . '_credentials', $credsForCache);
             $credentials = call_user_func(CredentialProvider::defaultProvider([
                 'credentials' => $cache,
@@ -1790,7 +1900,7 @@ EOT;
         $instanceCredential = new Credentials('instance_foo', 'instance_bar', 'instance_baz', PHP_INT_MAX);
         $ecsCredential = new Credentials('ecs_foo', 'ecs_bar', 'ecs_baz', PHP_INT_MAX);
 
-        $cache = new LruArrayCache;
+        $cache = new LruArrayCache();
         $cache->set('aws_cached_instance_credentials', $instanceCredential);
         $cache->set('aws_cached_ecs_credentials', $ecsCredential);
 
@@ -1808,7 +1918,7 @@ EOT;
             'credentials' => $cache,
         ]))
             ->wait();
-    
+
         $this->assertSame($ecsCredential->getAccessKeyId(), $credentials->getAccessKeyId());
         $this->assertSame($ecsCredential->getSecretKey(), $credentials->getSecretKey());
 
@@ -1819,7 +1929,7 @@ EOT;
             'credentials' => $cache,
         ]))
             ->wait();
-            
+
         $this->assertSame($ecsCredential->getAccessKeyId(), $credentials->getAccessKeyId());
         $this->assertSame($ecsCredential->getSecretKey(), $credentials->getSecretKey());
     }
@@ -1833,7 +1943,9 @@ EOT;
         putenv('HOME=' . dirname($dir));
         $a = CredentialProvider::ini('foo');
         $b = CredentialProvider::ini();
-        $c = function () { $this->fail('Should not have called'); };
+        $c = function () {
+            $this->fail('Should not have called');
+        };
         $provider = CredentialProvider::chain($a, $b, $c);
         $creds = $provider()->wait();
         $this->assertSame('foo', $creds->getAccessKeyId());
@@ -1881,9 +1993,12 @@ EOT;
      * @param bool $expected
      */
     public function testShouldUseEcs(
-        $relative, $serverRelative, $full, $serverFull, $expected
-    )
-    {
+        $relative,
+        $serverRelative,
+        $full,
+        $serverFull,
+        $expected
+    ) {
         $this->clearEnv();
         putenv('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI' . $relative);
         $_SERVER['AWS_CONTAINER_CREDENTIALS_RELATIVE_URI'] = $serverRelative;

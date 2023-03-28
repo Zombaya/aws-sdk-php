@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\WorkSpaces;
 
 use Aws\AwsClient;
@@ -20,6 +21,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise createConnectionAliasAsync(array $args = [])
  * @method \Aws\Result createIpGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createIpGroupAsync(array $args = [])
+ * @method \Aws\Result createStandbyWorkspaces(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise createStandbyWorkspacesAsync(array $args = [])
  * @method \Aws\Result createTags(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createTagsAsync(array $args = [])
  * @method \Aws\Result createUpdatedWorkspaceImage(array $args = [])
@@ -92,6 +95,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise migrateWorkspaceAsync(array $args = [])
  * @method \Aws\Result modifyAccount(array $args = [])
  * @method \GuzzleHttp\Promise\Promise modifyAccountAsync(array $args = [])
+ * @method \Aws\Result modifyCertificateBasedAuthProperties(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise modifyCertificateBasedAuthPropertiesAsync(array $args = [])
  * @method \Aws\Result modifyClientProperties(array $args = [])
  * @method \GuzzleHttp\Promise\Promise modifyClientPropertiesAsync(array $args = [])
  * @method \Aws\Result modifySamlProperties(array $args = [])
@@ -133,4 +138,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateWorkspaceImagePermission(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateWorkspaceImagePermissionAsync(array $args = [])
  */
-class WorkSpacesClient extends AwsClient {}
+class WorkSpacesClient extends AwsClient
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Route53Domains;
 
 use Aws\AwsClient;
@@ -8,6 +9,8 @@ use Aws\AwsClient;
  *
  * @method \Aws\Result acceptDomainTransferFromAnotherAwsAccount(array $args = [])
  * @method \GuzzleHttp\Promise\Promise acceptDomainTransferFromAnotherAwsAccountAsync(array $args = [])
+ * @method \Aws\Result associateDelegationSignerToDomain(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise associateDelegationSignerToDomainAsync(array $args = [])
  * @method \Aws\Result cancelDomainTransferToAnotherAwsAccount(array $args = [])
  * @method \GuzzleHttp\Promise\Promise cancelDomainTransferToAnotherAwsAccountAsync(array $args = [])
  * @method \Aws\Result checkDomainAvailability(array $args = [])
@@ -22,6 +25,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise disableDomainAutoRenewAsync(array $args = [])
  * @method \Aws\Result disableDomainTransferLock(array $args = [])
  * @method \GuzzleHttp\Promise\Promise disableDomainTransferLockAsync(array $args = [])
+ * @method \Aws\Result disassociateDelegationSignerFromDomain(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise disassociateDelegationSignerFromDomainAsync(array $args = [])
  * @method \Aws\Result enableDomainAutoRenew(array $args = [])
  * @method \GuzzleHttp\Promise\Promise enableDomainAutoRenewAsync(array $args = [])
  * @method \Aws\Result enableDomainTransferLock(array $args = [])
@@ -42,6 +47,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listPricesAsync(array $args = [])
  * @method \Aws\Result listTagsForDomain(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForDomainAsync(array $args = [])
+ * @method \Aws\Result pushDomain(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise pushDomainAsync(array $args = [])
  * @method \Aws\Result registerDomain(array $args = [])
  * @method \GuzzleHttp\Promise\Promise registerDomainAsync(array $args = [])
  * @method \Aws\Result rejectDomainTransferFromAnotherAwsAccount(array $args = [])
@@ -50,6 +57,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise renewDomainAsync(array $args = [])
  * @method \Aws\Result resendContactReachabilityEmail(array $args = [])
  * @method \GuzzleHttp\Promise\Promise resendContactReachabilityEmailAsync(array $args = [])
+ * @method \Aws\Result resendOperationAuthorization(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise resendOperationAuthorizationAsync(array $args = [])
  * @method \Aws\Result retrieveDomainAuthCode(array $args = [])
  * @method \GuzzleHttp\Promise\Promise retrieveDomainAuthCodeAsync(array $args = [])
  * @method \Aws\Result transferDomain(array $args = [])
@@ -67,4 +76,6 @@ use Aws\AwsClient;
  * @method \Aws\Result viewBilling(array $args = [])
  * @method \GuzzleHttp\Promise\Promise viewBillingAsync(array $args = [])
  */
-class Route53DomainsClient extends AwsClient {}
+class Route53DomainsClient extends AwsClient
+{
+}

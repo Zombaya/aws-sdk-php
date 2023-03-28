@@ -1,9 +1,9 @@
 <?php
+
 namespace Aws\Test\Integ;
 
 use Aws;
 use Aws\Exception\AwsException;
-use Aws\JsonCompiler;
 use Aws\Result;
 use Aws\Sdk;
 use Behat\Behat\Context\Context;
@@ -259,7 +259,7 @@ class SmokeContext extends Assert implements
     public function setUp(BeforeScenarioScope $scope)
     {
         foreach ($scope->getFeature()->getTags() as $tag) {
-            try{
+            try {
                 $this->serviceName = Aws\manifest($tag)['namespace'];
                 break;
             } catch (\Exception $e) {

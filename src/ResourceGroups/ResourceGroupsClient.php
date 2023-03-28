@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\ResourceGroups;
 
 use Aws\AwsClient;
@@ -9,6 +10,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise createGroupAsync(array $args = [])
  * @method \Aws\Result deleteGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteGroupAsync(array $args = [])
+ * @method \Aws\Result getAccountSettings(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getAccountSettingsAsync(array $args = [])
  * @method \Aws\Result getGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getGroupAsync(array $args = [])
  * @method \Aws\Result getGroupConfiguration(array $args = [])
@@ -33,9 +36,13 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise ungroupResourcesAsync(array $args = [])
  * @method \Aws\Result untag(array $args = [])
  * @method \GuzzleHttp\Promise\Promise untagAsync(array $args = [])
+ * @method \Aws\Result updateAccountSettings(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise updateAccountSettingsAsync(array $args = [])
  * @method \Aws\Result updateGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateGroupAsync(array $args = [])
  * @method \Aws\Result updateGroupQuery(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateGroupQueryAsync(array $args = [])
  */
-class ResourceGroupsClient extends AwsClient {}
+class ResourceGroupsClient extends AwsClient
+{
+}

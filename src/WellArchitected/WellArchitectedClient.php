@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\WellArchitected;
 
 use Aws\AwsClient;
@@ -47,6 +48,10 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise importLensAsync(array $args = [])
  * @method \Aws\Result listAnswers(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listAnswersAsync(array $args = [])
+ * @method \Aws\Result listCheckDetails(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listCheckDetailsAsync(array $args = [])
+ * @method \Aws\Result listCheckSummaries(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listCheckSummariesAsync(array $args = [])
  * @method \Aws\Result listLensReviewImprovements(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listLensReviewImprovementsAsync(array $args = [])
  * @method \Aws\Result listLensReviews(array $args = [])
@@ -86,4 +91,6 @@ use Aws\AwsClient;
  * @method \Aws\Result upgradeLensReview(array $args = [])
  * @method \GuzzleHttp\Promise\Promise upgradeLensReviewAsync(array $args = [])
  */
-class WellArchitectedClient extends AwsClient {}
+class WellArchitectedClient extends AwsClient
+{
+}

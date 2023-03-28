@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\IoTSiteWise;
 
 use Aws\AwsClient;
@@ -95,8 +96,12 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getInterpolatedAssetPropertyValuesAsync(array $args = [])
  * @method \Aws\Result listAccessPolicies(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listAccessPoliciesAsync(array $args = [])
+ * @method \Aws\Result listAssetModelProperties(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listAssetModelPropertiesAsync(array $args = [])
  * @method \Aws\Result listAssetModels(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listAssetModelsAsync(array $args = [])
+ * @method \Aws\Result listAssetProperties(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listAssetPropertiesAsync(array $args = [])
  * @method \Aws\Result listAssetRelationships(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listAssetRelationshipsAsync(array $args = [])
  * @method \Aws\Result listAssets(array $args = [])
@@ -148,4 +153,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateProject(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateProjectAsync(array $args = [])
  */
-class IoTSiteWiseClient extends AwsClient {}
+class IoTSiteWiseClient extends AwsClient
+{
+}

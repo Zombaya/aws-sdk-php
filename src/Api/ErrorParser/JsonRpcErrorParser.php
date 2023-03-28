@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Api\ErrorParser;
 
 use Aws\Api\Parser\JsonParser;
@@ -33,8 +34,10 @@ class JsonRpcErrorParser extends AbstractErrorParser
         }
 
         if (isset($data['parsed']['__type'])) {
-            $parts = explode('#', $data['parsed']['__type']);
-            $data['code'] = isset($parts[1]) ? $parts[1] : $parts[0];
+            if (!isset($data['code'])) {
+                $parts = explode('#', $data['parsed']['__type']);
+                $data['code'] = isset($parts[1]) ? $parts[1] : $parts[0];
+            }
             $data['message'] = isset($data['parsed']['message'])
                 ? $data['parsed']['message']
                 : null;

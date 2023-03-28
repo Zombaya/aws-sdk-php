@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Sts;
 
 use Aws\AwsClient;
@@ -29,7 +30,6 @@ use Aws\Sts\RegionalEndpoints\ConfigurationProvider;
  */
 class StsClient extends AwsClient
 {
-
     /**
      * {@inheritdoc}
      *
@@ -57,6 +57,7 @@ class StsClient extends AwsClient
         ) {
             $args['sts_regional_endpoints'] = ConfigurationProvider::defaultProvider($args);
         }
+        $this->addBuiltIns($args);
         parent::__construct($args);
     }
 
@@ -84,5 +85,35 @@ class StsClient extends AwsClient
                 ? (int) $c['Expiration']->format('U')
                 : null
         );
+    }
+
+    /**
+     * Adds service-specific client built-in value
+     *
+     * @return void
+     */
+    private function addBuiltIns($args)
+    {
+        $key = 'AWS::STS::UseGlobalEndpoint';
+        $result = $args['sts_regional_endpoints'] instanceof \Closure ?
+            $args['sts_regional_endpoints']()->wait() : $args['sts_regional_endpoints'];
+
+        if (is_string($result)) {
+            if ($result === 'regional') {
+                $value = false;
+            } elseif ($result === 'legacy') {
+                $value = true;
+            } else {
+                return;
+            }
+        } else {
+            if ($result->getEndpointsType() === 'regional') {
+                $value = false;
+            } else {
+                $value = true;
+            }
+        }
+
+        $this->clientBuiltIns[$key] = $value;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\drs;
 
 use Aws\AwsClient;
@@ -49,12 +50,18 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result retryDataReplication(array $args = [])
  * @method \GuzzleHttp\Promise\Promise retryDataReplicationAsync(array $args = [])
+ * @method \Aws\Result reverseReplication(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise reverseReplicationAsync(array $args = [])
  * @method \Aws\Result startFailbackLaunch(array $args = [])
  * @method \GuzzleHttp\Promise\Promise startFailbackLaunchAsync(array $args = [])
  * @method \Aws\Result startRecovery(array $args = [])
  * @method \GuzzleHttp\Promise\Promise startRecoveryAsync(array $args = [])
+ * @method \Aws\Result startReplication(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise startReplicationAsync(array $args = [])
  * @method \Aws\Result stopFailback(array $args = [])
  * @method \GuzzleHttp\Promise\Promise stopFailbackAsync(array $args = [])
+ * @method \Aws\Result stopReplication(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise stopReplicationAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result terminateRecoveryInstances(array $args = [])
@@ -70,4 +77,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateReplicationConfigurationTemplate(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateReplicationConfigurationTemplateAsync(array $args = [])
  */
-class drsClient extends AwsClient {}
+class drsClient extends AwsClient
+{
+}

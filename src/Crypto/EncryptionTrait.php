@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Crypto;
 
 use GuzzleHttp\Psr7;
@@ -156,7 +157,7 @@ trait EncryptionTrait
                     $cipherOptions['Iv'],
                     $cipherOptions['Aad'] = isset($cipherOptions['Aad'])
                         ? $cipherOptions['Aad']
-                        : null,
+                        : '',
                     $cipherOptions['TagLength'],
                     $cipherOptions['KeySize']
                 );

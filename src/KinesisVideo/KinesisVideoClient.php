@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\KinesisVideo;
 
 use Aws\AwsClient;
@@ -13,8 +14,14 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteSignalingChannelAsync(array $args = [])
  * @method \Aws\Result deleteStream(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteStreamAsync(array $args = [])
+ * @method \Aws\Result describeEdgeConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeEdgeConfigurationAsync(array $args = [])
  * @method \Aws\Result describeImageGenerationConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeImageGenerationConfigurationAsync(array $args = [])
+ * @method \Aws\Result describeMappedResourceConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeMappedResourceConfigurationAsync(array $args = [])
+ * @method \Aws\Result describeMediaStorageConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeMediaStorageConfigurationAsync(array $args = [])
  * @method \Aws\Result describeNotificationConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeNotificationConfigurationAsync(array $args = [])
  * @method \Aws\Result describeSignalingChannel(array $args = [])
@@ -33,6 +40,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result listTagsForStream(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForStreamAsync(array $args = [])
+ * @method \Aws\Result startEdgeConfigurationUpdate(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise startEdgeConfigurationUpdateAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result tagStream(array $args = [])
@@ -45,6 +54,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise updateDataRetentionAsync(array $args = [])
  * @method \Aws\Result updateImageGenerationConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateImageGenerationConfigurationAsync(array $args = [])
+ * @method \Aws\Result updateMediaStorageConfiguration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise updateMediaStorageConfigurationAsync(array $args = [])
  * @method \Aws\Result updateNotificationConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateNotificationConfigurationAsync(array $args = [])
  * @method \Aws\Result updateSignalingChannel(array $args = [])
@@ -52,4 +63,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateStream(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateStreamAsync(array $args = [])
  */
-class KinesisVideoClient extends AwsClient {}
+class KinesisVideoClient extends AwsClient
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\MigrationHubStrategyRecommendations;
 
 use Aws\AwsClient;
@@ -13,6 +14,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getAssessmentAsync(array $args = [])
  * @method \Aws\Result getImportFileTask(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getImportFileTaskAsync(array $args = [])
+ * @method \Aws\Result getLatestAssessmentId(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getLatestAssessmentIdAsync(array $args = [])
  * @method \Aws\Result getPortfolioPreferences(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getPortfolioPreferencesAsync(array $args = [])
  * @method \Aws\Result getPortfolioSummary(array $args = [])
@@ -46,4 +49,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateServerConfig(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateServerConfigAsync(array $args = [])
  */
-class MigrationHubStrategyRecommendationsClient extends AwsClient {}
+class MigrationHubStrategyRecommendationsClient extends AwsClient
+{
+}

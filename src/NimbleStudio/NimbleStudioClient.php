@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\NimbleStudio;
 
 use Aws\AwsClient;
@@ -47,6 +48,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getStreamingImageAsync(array $args = [])
  * @method \Aws\Result getStreamingSession(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getStreamingSessionAsync(array $args = [])
+ * @method \Aws\Result getStreamingSessionBackup(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getStreamingSessionBackupAsync(array $args = [])
  * @method \Aws\Result getStreamingSessionStream(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getStreamingSessionStreamAsync(array $args = [])
  * @method \Aws\Result getStudio(array $args = [])
@@ -65,6 +68,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listLaunchProfilesAsync(array $args = [])
  * @method \Aws\Result listStreamingImages(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listStreamingImagesAsync(array $args = [])
+ * @method \Aws\Result listStreamingSessionBackups(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listStreamingSessionBackupsAsync(array $args = [])
  * @method \Aws\Result listStreamingSessions(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listStreamingSessionsAsync(array $args = [])
  * @method \Aws\Result listStudioComponents(array $args = [])
@@ -100,4 +105,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateStudioComponent(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateStudioComponentAsync(array $args = [])
  */
-class NimbleStudioClient extends AwsClient {}
+class NimbleStudioClient extends AwsClient
+{
+}

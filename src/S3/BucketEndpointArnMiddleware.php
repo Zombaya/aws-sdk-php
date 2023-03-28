@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\S3;
 
 use Aws\Api\Service;
@@ -34,6 +35,9 @@ class BucketEndpointArnMiddleware
     /** @var array */
     private $nonArnableCommands = ['CreateBucket'];
 
+    /** @var boolean */
+    private $isUseEndpointV2;
+
     /**
      * Create a middleware wrapper function.
      *
@@ -45,11 +49,11 @@ class BucketEndpointArnMiddleware
     public static function wrap(
         Service $service,
         $region,
-        array $config
-
+        array $config,
+        $isUseEndpointV2
     ) {
-        return function (callable $handler) use ($service, $region, $config) {
-            return new self($handler, $service, $region, $config);
+        return function (callable $handler) use ($service, $region, $config, $isUseEndpointV2) {
+            return new self($handler, $service, $region, $config, $isUseEndpointV2);
         };
     }
 
@@ -57,13 +61,15 @@ class BucketEndpointArnMiddleware
         callable $nextHandler,
         Service $service,
         $region,
-        array $config = []
+        array $config = [],
+        $isUseEndpointV2 = false
     ) {
         $this->partitionProvider = PartitionEndpointProvider::defaultProvider();
         $this->region = $region;
         $this->service = $service;
         $this->config = $config;
         $this->nextHandler = $nextHandler;
+        $this->isUseEndpointV2 = $isUseEndpointV2;
     }
 
     public function __invoke(CommandInterface $cmd, RequestInterface $req)
@@ -82,22 +88,21 @@ class BucketEndpointArnMiddleware
                 }
 
                 if (!empty($arnableKey) && ArnParser::isArn($cmd[$arnableKey])) {
-
                     try {
                         // Throw for commands that do not support ARN inputs
                         if (in_array($cmd->getName(), $this->nonArnableCommands)) {
                             throw new S3Exception(
                                 'ARN values cannot be used in the bucket field for'
-                                    . ' the ' . $cmd->getName() . ' operation.',
+                                . ' the ' . $cmd->getName() . ' operation.',
                                 $cmd
                             );
                         }
 
-                        $arn = ArnParser::parse($cmd[$arnableKey]);
-                        $partition = $this->validateArn($arn);
-
-                        $host = $this->generateAccessPointHost($arn, $req);
-
+                        if (!$this->isUseEndpointV2) {
+                            $arn = ArnParser::parse($cmd[$arnableKey]);
+                            $partition = $this->validateArn($arn);
+                            $host = $this->generateAccessPointHost($arn, $req);
+                        }
                         // Remove encoded bucket string from path
                         $path = $req->getUri()->getPath();
                         $encoded = rawurlencode($cmd[$arnableKey]);
@@ -113,6 +118,13 @@ class BucketEndpointArnMiddleware
                         }
 
                         // Set modified request
+                        if ($this->isUseEndpointV2) {
+                            $req = $req->withUri(
+                                $req->getUri()->withPath($path)
+                            );
+                            goto next;
+                        }
+
                         $req = $req->withUri(
                             $req->getUri()->withPath($path)->withHost($host)
                         );
@@ -141,7 +153,7 @@ class BucketEndpointArnMiddleware
                         // Add context to ARN exception
                         throw new S3Exception(
                             'Bucket parameter parsed as ARN and failed with: '
-                                . $e->getMessage(),
+                            . $e->getMessage(),
                             $cmd,
                             [],
                             $e
@@ -150,9 +162,10 @@ class BucketEndpointArnMiddleware
                 }
             }
         }
-
-        return $nextHandler($cmd, $req);
+        next:
+            return $nextHandler($cmd, $req);
     }
+
 
     private function generateAccessPointHost(
         BaseAccessPointArn $arn,
@@ -174,15 +187,15 @@ class BucketEndpointArnMiddleware
         }
 
         $host = "{$accesspointName}-" . $arn->getAccountId();
-        
+
         $useFips = $this->config['use_fips_endpoint']->isUseFipsEndpoint();
         $fipsString = $useFips ? "-fips" : "";
 
         if ($arn instanceof OutpostsAccessPointArn) {
             $host .= '.' . $arn->getOutpostId() . '.s3-outposts';
-        } else if ($arn instanceof ObjectLambdaAccessPointArn) {
+        } elseif ($arn instanceof ObjectLambdaAccessPointArn) {
             if (!empty($this->config['endpoint'])) {
-               return $host . '.' . $this->config['endpoint'];
+                return $host . '.' . $this->config['endpoint'];
             } else {
                 $host .= ".s3-object-lambda{$fipsString}";
             }
@@ -213,7 +226,6 @@ class BucketEndpointArnMiddleware
     private function validateArn($arn)
     {
         if ($arn instanceof AccessPointArnInterface) {
-
             // Dualstack is not supported with Outposts access points
             if ($arn instanceof OutpostsAccessPointArn
                 && !empty($this->config['dual_stack'])
@@ -221,7 +233,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'Dualstack is currently not supported with S3 Outposts access'
                     . ' points. Please disable dualstack or do not supply an'
-                    . ' access point ARN.');
+                    . ' access point ARN.'
+                );
             }
             if ($arn instanceof MultiRegionAccessPointArn) {
                 if (!empty($this->config['disable_multiregion_access_points'])) {
@@ -242,7 +255,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'Accelerate is currently not supported with access points.'
                     . ' Please disable accelerate or do not supply an access'
-                    . ' point ARN.');
+                    . ' point ARN.'
+                );
             }
 
             // Path-style is not supported with access points
@@ -250,7 +264,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'Path-style addressing is currently not supported with'
                     . ' access points. Please disable path-style or do not'
-                    . ' supply an access point ARN.');
+                    . ' supply an access point ARN.'
+                );
             }
 
             // Custom endpoint is not supported with access points
@@ -260,7 +275,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'A custom endpoint has been supplied along with an access'
                     . ' point ARN, and these are not compatible with each other.'
-                    . ' Please only use one or the other.');
+                    . ' Please only use one or the other.'
+                );
             }
 
             // Dualstack is not supported with object lambda access points
@@ -270,7 +286,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'Dualstack is currently not supported with Object Lambda access'
                     . ' points. Please disable dualstack or do not supply an'
-                    . ' access point ARN.');
+                    . ' access point ARN.'
+                );
             }
             // Global endpoints do not support cross-region requests
             if ($this->isGlobal($this->region)
@@ -281,7 +298,8 @@ class BucketEndpointArnMiddleware
                 throw new UnresolvedEndpointException(
                     'Global endpoints do not support cross region requests.'
                     . ' Please enable use_arn_region or do not supply a global region'
-                    . ' with a different region in the ARN.');
+                    . ' with a different region in the ARN.'
+                );
             }
 
             // Get partitions for ARN and client region

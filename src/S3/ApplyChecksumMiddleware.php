@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\S3;
 
 use Aws\Api\Service;
@@ -17,7 +18,7 @@ use Psr\Http\Message\RequestInterface;
 class ApplyChecksumMiddleware
 {
     use CalculatesChecksumTrait;
-    private static $sha256 = [
+    private static $sha256AndMd5 = [
         'PutObject',
         'UploadPart',
     ];
@@ -53,6 +54,11 @@ class ApplyChecksumMiddleware
         $next = $this->nextHandler;
         $name = $command->getName();
         $body = $request->getBody();
+
+        //Checks if AddContentMD5 has been specified for PutObject or UploadPart
+        $addContentMD5 = isset($command['AddContentMD5'])
+            ? $command['AddContentMD5']
+            : null;
 
         $op = $this->api->getOperation($command->getName());
 
@@ -90,11 +96,13 @@ class ApplyChecksumMiddleware
         }
 
         if (!empty($checksumInfo)) {
-        //if the checksum member is absent, check if it's required
-        $checksumRequired = isset($checksumInfo['requestChecksumRequired'])
-            ? $checksumInfo['requestChecksumRequired']
-            : null;
-            if (!empty($checksumRequired) && !$request->hasHeader('Content-MD5')) {
+            //if the checksum member is absent, check if it's required
+            $checksumRequired = isset($checksumInfo['requestChecksumRequired'])
+                ? $checksumInfo['requestChecksumRequired']
+                : null;
+            if ((!empty($checksumRequired) && !$request->hasHeader('Content-MD5'))
+                || (in_array($name, self::$sha256AndMd5) && $addContentMD5)
+            ) {
                 // Set the content MD5 header for operations that require it.
                 $request = $request->withHeader(
                     'Content-MD5',
@@ -104,7 +112,7 @@ class ApplyChecksumMiddleware
             }
         }
 
-        if (in_array($name, self::$sha256) && $command['ContentSHA256']) {
+        if (in_array($name, self::$sha256AndMd5) && $command['ContentSHA256']) {
             // Set the content hash header if provided in the parameters.
             $request = $request->withHeader(
                 'X-Amz-Content-Sha256',

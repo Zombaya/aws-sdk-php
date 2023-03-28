@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Credentials;
 
 use Aws\Credentials\EcsCredentialProvider;
@@ -16,6 +17,8 @@ use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 class EcsCredentialProviderTest extends TestCase
 {
     private $uripath;
+    private $fulluripath;
+    private $authtokenpath;
 
     private function clearEnv()
     {
@@ -83,7 +86,8 @@ class EcsCredentialProviderTest extends TestCase
         new EcsCredentialProvider();
     }
 
-    public function testRequestHeaderWithAuthorisationKey(){
+    public function testRequestHeaderWithAuthorisationKey()
+    {
         $this->clearEnv();
         $provider = new EcsCredentialProvider();
 
@@ -98,8 +102,12 @@ class EcsCredentialProviderTest extends TestCase
     }
 
     private function getCredentialArray(
-        $key, $secret, $token = null, $time = null, $success = true
-    ){
+        $key,
+        $secret,
+        $token = null,
+        $time = null,
+        $success = true
+    ) {
         return [
             'Code'            => $success ? 'Success' : 'Failed',
             'AccessKeyId'     => $key,
@@ -193,7 +201,7 @@ class EcsCredentialProviderTest extends TestCase
         $args['client'] = $guzzle;
 
         $provider = new EcsCredentialProvider($args);
-        $provider()->otherwise(function(\Exception $e) {
+        $provider()->otherwise(function (\Exception $e) {
             $this->fail('Did not override ECS request proxy settings.');
         })->wait();
 

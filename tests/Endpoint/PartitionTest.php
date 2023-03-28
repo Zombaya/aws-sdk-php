@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Endpoint;
 
 use Aws\Endpoint\Partition;
@@ -512,7 +513,6 @@ class PartitionTest extends TestCase
 
         $data = $partition($params);
         $this->assertEquals($expectedEndpoint, $data['endpoint']);
-
     }
 
     public function stsEndpointTestCases()
@@ -611,7 +611,6 @@ class PartitionTest extends TestCase
 
         $data = $partition($params);
         $this->assertEquals($expectedEndpoint, $data['endpoint']);
-
     }
 
     public function s3EndpointTestCases()
@@ -676,8 +675,7 @@ class PartitionTest extends TestCase
         array $definition,
         $fipsConfig,
         $dualstackConfig
-    )
-    {
+    ) {
         $partition = new Partition($definition);
         $resolved = $partition([
             'region' => 'us-east-1',
@@ -826,8 +824,7 @@ class PartitionTest extends TestCase
         array $definition,
         $fipsConfig,
         $dualstackConfig
-    )
-    {
+    ) {
         $partition = new Partition($definition);
         $resolved = $partition([
             'region' => 'us-east-1',
@@ -961,6 +958,74 @@ class PartitionTest extends TestCase
                 ],
                 null,
                 null
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider booleanConfigProvider
+     *
+     * @param array $tags
+     * @param @fipsConfig
+     * @param @dualstackConfig
+     */
+    public function testGetVariantWithBooleanConfigValues(
+        array $tags,
+        $fipsConfig,
+        $dualstackConfig
+    ) {
+        $definition = [
+            'partition' => 'aws_test',
+            'dnsSuffix' => 'amazonaws.com',
+            'regions' => [
+                'region' => [
+                    'description' => 'A description',
+                ],
+            ],
+            'services' => [
+                'service' => [
+                    'endpoints' => [
+                        'us-east-1' => [
+                            'variants' => [[
+                                'hostname' => 'service-fips.dualstack.testsuffix.com',
+                                'tags' => $tags
+                            ]]
+                        ],
+                        'us-west-2' => [],
+                    ],
+                ],
+            ],
+        ];
+        $partition = new Partition($definition);
+        $resolved = $partition([
+            'region' => 'us-east-1',
+            'service' => 'service',
+            'options' => [
+                'use_fips_endpoint' => $fipsConfig,
+                'use_dual_stack_endpoint' => $dualstackConfig
+            ]
+        ]);
+
+        $this->assertStringContainsString('testsuffix.com', $resolved['endpoint']);
+    }
+
+    public function booleanConfigProvider()
+    {
+        return [
+            [
+                ['fips'],
+                true,
+                false
+            ],
+            [
+                ['dualstack'],
+                false,
+                true
+            ],
+            [
+                ['fips', 'dualstack'],
+                true,
+                true
             ]
         ];
     }

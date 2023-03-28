@@ -12,7 +12,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use DomainException;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert;
 use GuzzleHttp\Psr7;
 
 /**
@@ -146,7 +146,7 @@ class PerformanceContext implements Context, SnippetAcceptingContext
                     ->findOperationWithNoRequiredParameters($service);
                 $this->addMockResults(
                     $this->clients[$service],
-                    array_fill(0, $numCommands, new Result)
+                    array_fill(0, $numCommands, new Result())
                 );
 
                 for ($i = 0; $i < $numCommands; $i++) {

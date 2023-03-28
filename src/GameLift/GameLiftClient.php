@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\GameLift;
 
 use Aws\AwsClient;
@@ -24,6 +25,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise createGameSessionAsync(array $args = [])
  * @method \Aws\Result createGameSessionQueue(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createGameSessionQueueAsync(array $args = [])
+ * @method \Aws\Result createLocation(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise createLocationAsync(array $args = [])
  * @method \Aws\Result createMatchmakingConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise createMatchmakingConfigurationAsync(array $args = [])
  * @method \Aws\Result createMatchmakingRuleSet(array $args = [])
@@ -50,6 +53,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteGameServerGroupAsync(array $args = [])
  * @method \Aws\Result deleteGameSessionQueue(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteGameSessionQueueAsync(array $args = [])
+ * @method \Aws\Result deleteLocation(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deleteLocationAsync(array $args = [])
  * @method \Aws\Result deleteMatchmakingConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteMatchmakingConfigurationAsync(array $args = [])
  * @method \Aws\Result deleteMatchmakingRuleSet(array $args = [])
@@ -62,12 +67,16 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteVpcPeeringAuthorizationAsync(array $args = [])
  * @method \Aws\Result deleteVpcPeeringConnection(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteVpcPeeringConnectionAsync(array $args = [])
+ * @method \Aws\Result deregisterCompute(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deregisterComputeAsync(array $args = [])
  * @method \Aws\Result deregisterGameServer(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deregisterGameServerAsync(array $args = [])
  * @method \Aws\Result describeAlias(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeAliasAsync(array $args = [])
  * @method \Aws\Result describeBuild(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeBuildAsync(array $args = [])
+ * @method \Aws\Result describeCompute(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise describeComputeAsync(array $args = [])
  * @method \Aws\Result describeEC2InstanceLimits(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeEC2InstanceLimitsAsync(array $args = [])
  * @method \Aws\Result describeFleetAttributes(array $args = [])
@@ -120,6 +129,10 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise describeVpcPeeringAuthorizationsAsync(array $args = [])
  * @method \Aws\Result describeVpcPeeringConnections(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeVpcPeeringConnectionsAsync(array $args = [])
+ * @method \Aws\Result getComputeAccess(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getComputeAccessAsync(array $args = [])
+ * @method \Aws\Result getComputeAuthToken(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getComputeAuthTokenAsync(array $args = [])
  * @method \Aws\Result getGameSessionLogUrl(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getGameSessionLogUrlAsync(array $args = [])
  * @method \Aws\Result getInstanceAccess(array $args = [])
@@ -128,18 +141,24 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listAliasesAsync(array $args = [])
  * @method \Aws\Result listBuilds(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listBuildsAsync(array $args = [])
+ * @method \Aws\Result listCompute(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listComputeAsync(array $args = [])
  * @method \Aws\Result listFleets(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listFleetsAsync(array $args = [])
  * @method \Aws\Result listGameServerGroups(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listGameServerGroupsAsync(array $args = [])
  * @method \Aws\Result listGameServers(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listGameServersAsync(array $args = [])
+ * @method \Aws\Result listLocations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listLocationsAsync(array $args = [])
  * @method \Aws\Result listScripts(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listScriptsAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result putScalingPolicy(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putScalingPolicyAsync(array $args = [])
+ * @method \Aws\Result registerCompute(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise registerComputeAsync(array $args = [])
  * @method \Aws\Result registerGameServer(array $args = [])
  * @method \GuzzleHttp\Promise\Promise registerGameServerAsync(array $args = [])
  * @method \Aws\Result requestUploadCredentials(array $args = [])
@@ -197,4 +216,6 @@ use Aws\AwsClient;
  * @method \Aws\Result validateMatchmakingRuleSet(array $args = [])
  * @method \GuzzleHttp\Promise\Promise validateMatchmakingRuleSetAsync(array $args = [])
  */
-class GameLiftClient extends AwsClient {}
+class GameLiftClient extends AwsClient
+{
+}

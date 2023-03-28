@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Script\Composer;
 
 use Composer\Script\Event;
@@ -9,8 +10,7 @@ class Composer
     public static function removeUnusedServices(
         Event      $event,
         Filesystem $filesystem = null
-    )
-    {
+    ) {
         $composer = $event->getComposer();
         $extra = $composer->getPackage()->getExtra();
         $listedServices = isset($extra['aws/aws-sdk-php'])
@@ -66,7 +66,7 @@ class Composer
         $listedServices,
         $vendorPath
     ) {
-        $unsafeForDeletion = ['Kms', 'S3', 'SSO', 'Sts'];
+        $unsafeForDeletion = ['Kms', 'S3', 'SSO', 'SSOOIDC', 'Sts'];
         if (in_array('DynamoDbStreams', $listedServices)) {
             $unsafeForDeletion[] = 'DynamoDb';
         }
@@ -83,7 +83,8 @@ class Composer
                 $modelDir = $modelPath . $modelName;
 
                 if ($filesystem->exists([$clientDir, $modelDir])) {
-                    $filesystem->remove([$clientDir, $modelDir]);;
+                    $filesystem->remove([$clientDir, $modelDir]);
+                    ;
                     $deleteCount++;
                 }
             }

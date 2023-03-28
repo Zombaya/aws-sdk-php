@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Api;
 
 /**
@@ -65,5 +66,13 @@ class Shape extends AbstractModel
     public function getName()
     {
         return $this->definition['name'];
+    }
+
+    /**
+     * Get a context param definition.
+     */
+    public function getContextParam()
+    {
+        return $this->contextParam;
     }
 }

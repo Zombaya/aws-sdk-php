@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\LicenseManager;
 
 use Aws\AwsClient;
@@ -77,8 +78,12 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listLicensesAsync(array $args = [])
  * @method \Aws\Result listReceivedGrants(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listReceivedGrantsAsync(array $args = [])
+ * @method \Aws\Result listReceivedGrantsForOrganization(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listReceivedGrantsForOrganizationAsync(array $args = [])
  * @method \Aws\Result listReceivedLicenses(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listReceivedLicensesAsync(array $args = [])
+ * @method \Aws\Result listReceivedLicensesForOrganization(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listReceivedLicensesForOrganizationAsync(array $args = [])
  * @method \Aws\Result listResourceInventory(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listResourceInventoryAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
@@ -102,4 +107,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateServiceSettings(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateServiceSettingsAsync(array $args = [])
  */
-class LicenseManagerClient extends AwsClient {}
+class LicenseManagerClient extends AwsClient
+{
+}

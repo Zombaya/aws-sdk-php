@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\S3Control;
 
 use Aws\Arn\Exception\InvalidArnException;
@@ -42,7 +43,7 @@ class EndpointArnMiddlewareTest extends TestCase
         $signingRegion,
         $signingService
     ) {
-        $options['http_handler'] = function($req) {
+        $options['http_handler'] = function ($req) {
             return Promise\Create::promiseFor(new Response());
         };
         $s3control = $this->getTestClient($options);
@@ -436,7 +437,7 @@ class EndpointArnMiddlewareTest extends TestCase
         $options,
         \Exception $expectedException
     ) {
-        $options['http_handler'] = function($req) {
+        $options['http_handler'] = function ($req) {
             return Promise\Create::promiseFor(new Response());
         };
         $s3control = $this->getTestClient($options);
@@ -464,9 +465,11 @@ class EndpointArnMiddlewareTest extends TestCase
                 ],
                 [
                     'region' => 'us-west-2',
+                    'use_arn_region' => false,
                 ],
-                new InvalidRegionException("The region specified in the ARN"
-                    . " (us-east-1) does not match the client region (us-west-2)."),
+                new UnresolvedEndpointException(
+                    'Invalid configuration: region from ARN `us-east-1` does not match client region `us-west-2` and UseArnRegion is `false`'
+                ),
             ],
             // Outposts accesspoint ARN, different partition
             [
@@ -479,8 +482,9 @@ class EndpointArnMiddlewareTest extends TestCase
                     'region' => 'us-west-2',
                     'use_arn_region' => true,
                 ],
-                new InvalidRegionException("The supplied ARN partition does not"
-                    . " match the client's partition."),
+                new UnresolvedEndpointException(
+                    'Client was configured for partition `aws` but ARN has `aws-cn`'
+                ),
             ],
             // Outposts accesspoint ARN, fips, use_arn_region true
             [
@@ -492,7 +496,9 @@ class EndpointArnMiddlewareTest extends TestCase
                 [
                     'region' => 'us-gov-east-1',
                 ],
-                new InvalidArnException("Provided ARN was not a valid S3 access point ARN.")
+                new UnresolvedEndpointException(
+                    'Client was configured for partition `aws-us-gov` but ARN has `aws`'
+                )
             ],
             // Outposts bucket ARN, fips, use_arn_region true
             [
@@ -504,7 +510,7 @@ class EndpointArnMiddlewareTest extends TestCase
                 [
                     'region' => 'us-gov-east-1',
                 ],
-                new InvalidRegionException("The region specified in the ARN (us-gov-west-1-fips) does not match the client region (us-gov-east-1).")
+                new UnresolvedEndpointException("Client was configured for partition `aws-us-gov` but ARN has `aws`")
             ],
             // Outposts accesspoint ARN, dualstack
             [
@@ -517,9 +523,7 @@ class EndpointArnMiddlewareTest extends TestCase
                     'region' => 'us-west-2',
                     'use_dual_stack_endpoint' => true,
                 ],
-                new UnresolvedEndpointException("Dualstack is currently not"
-                    . " supported with S3 Outposts ARNs. Please disable"
-                    . " dualstack or do not supply an Outposts ARN."),
+                new UnresolvedEndpointException("Invalid configuration: Outpost Access Points do not support dual-stack"),
             ],
             // Outposts accesspoint ARN, invalid ARN
             [
@@ -531,21 +535,7 @@ class EndpointArnMiddlewareTest extends TestCase
                 [
                     'region' => 'us-west-2',
                 ],
-                new InvalidArnException("Provided ARN was not a valid S3 access"
-                    . " point ARN."),
-            ],
-            // Outposts bucket ARN, different region
-            [
-                'DeleteBucket',
-                [
-                    'AccountId' => '123456789012',
-                    'Bucket' => 'arn:aws:s3-outposts:us-east-1:123456789012:outpost:op-01234567890123456:bucket:mybucket'
-                ],
-                [
-                    'region' => 'us-west-2',
-                ],
-                new InvalidRegionException("The region specified in the ARN"
-                    . " (us-east-1) does not match the client region (us-west-2)."),
+                new UnresolvedEndpointException('Invalid ARN: The Outpost Id was not set'),
             ],
             // Outposts bucket ARN, different partition
             [
@@ -557,8 +547,9 @@ class EndpointArnMiddlewareTest extends TestCase
                 [
                     'region' => 'us-west-2',
                 ],
-                new InvalidRegionException("The supplied ARN partition does not"
-                    . " match the client's partition."),
+                new UnresolvedEndpointException(
+                    'Client was configured for partition `aws` but ARN has `aws-cn`'
+                ),
             ],
             // Outposts bucket ARN, fips, use_arn_region false
             [
@@ -571,9 +562,9 @@ class EndpointArnMiddlewareTest extends TestCase
                     'region' => 'fips-us-gov-east-1',
                     'use_arn_region' => false
                 ],
-                new InvalidRegionException("The region specified in the"
-                    . " ARN (fips-us-gov-west-1) does not match the client region"
-                    . " (us-gov-east-1).")
+                new UnresolvedEndpointException(
+                    'Invalid configuration: region from ARN `fips-us-gov-west-1` does not match client region `us-gov-east-1` and UseArnRegion is `false`'
+                )
             ],
             // Outposts bucket ARN, dualstack
             [
@@ -586,9 +577,9 @@ class EndpointArnMiddlewareTest extends TestCase
                     'region' => 'us-west-2',
                     'use_dual_stack_endpoint' => true,
                 ],
-                new UnresolvedEndpointException("Dualstack is currently not"
-                    . " supported with S3 Outposts ARNs. Please disable dualstack"
-                    . " or do not supply an Outposts ARN."),
+                new UnresolvedEndpointException(
+                    "Invalid configuration: Outpost buckets do not support dual-stack"
+                ),
             ],
             // Outposts bucket ARN, invalid ARN
             [
@@ -600,8 +591,7 @@ class EndpointArnMiddlewareTest extends TestCase
                 [
                     'region' => 'us-west-2',
                 ],
-                new InvalidArnException("Provided ARN was not a valid S3 bucket"
-                    . " ARN."),
+                new UnresolvedEndpointException("Invalid ARN: The Outpost Id was not set"),
             ],
         ];
     }

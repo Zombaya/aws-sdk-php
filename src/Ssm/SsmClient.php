@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Ssm;
 
 use Aws\AwsClient;
@@ -52,6 +53,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deletePatchBaselineAsync(array $args = [])
  * @method \Aws\Result deleteResourceDataSync(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteResourceDataSyncAsync(array $args = [])
+ * @method \Aws\Result deleteResourcePolicy(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deleteResourcePolicyAsync(array $args = [])
  * @method \Aws\Result deregisterManagedInstance(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deregisterManagedInstanceAsync(array $args = [])
  * @method \Aws\Result deregisterPatchBaselineForPatchGroup(array $args = [])
@@ -172,6 +175,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getPatchBaselineAsync(array $args = [])
  * @method \Aws\Result getPatchBaselineForPatchGroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getPatchBaselineForPatchGroupAsync(array $args = [])
+ * @method \Aws\Result getResourcePolicies(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getResourcePoliciesAsync(array $args = [])
  * @method \Aws\Result getServiceSetting(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getServiceSettingAsync(array $args = [])
  * @method \Aws\Result labelParameterVersion(array $args = [])
@@ -216,6 +221,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise putInventoryAsync(array $args = [])
  * @method \Aws\Result putParameter(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putParameterAsync(array $args = [])
+ * @method \Aws\Result putResourcePolicy(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise putResourcePolicyAsync(array $args = [])
  * @method \Aws\Result registerDefaultPatchBaseline(array $args = [])
  * @method \GuzzleHttp\Promise\Promise registerDefaultPatchBaselineAsync(array $args = [])
  * @method \Aws\Result registerPatchBaselineForPatchGroup(array $args = [])
@@ -277,4 +284,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateServiceSetting(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateServiceSettingAsync(array $args = [])
  */
-class SsmClient extends AwsClient {}
+class SsmClient extends AwsClient
+{
+}

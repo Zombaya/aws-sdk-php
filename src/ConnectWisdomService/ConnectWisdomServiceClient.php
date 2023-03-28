@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\ConnectWisdomService;
 
 use Aws\AwsClient;
@@ -49,8 +50,6 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result notifyRecommendationsReceived(array $args = [])
  * @method \GuzzleHttp\Promise\Promise notifyRecommendationsReceivedAsync(array $args = [])
- * @method \Aws\Result putFeedback(array $args = [])
- * @method \GuzzleHttp\Promise\Promise putFeedbackAsync(array $args = [])
  * @method \Aws\Result queryAssistant(array $args = [])
  * @method \GuzzleHttp\Promise\Promise queryAssistantAsync(array $args = [])
  * @method \Aws\Result removeKnowledgeBaseTemplateUri(array $args = [])
@@ -70,4 +69,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateKnowledgeBaseTemplateUri(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateKnowledgeBaseTemplateUriAsync(array $args = [])
  */
-class ConnectWisdomServiceClient extends AwsClient {}
+class ConnectWisdomServiceClient extends AwsClient
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Endpoint;
 
 use ArrayAccess;
@@ -141,11 +142,11 @@ final class Partition implements ArrayAccess, PartitionInterface
             : $this->data['dnsSuffix'];
         return [
             'endpoint' => "{$scheme}://" . $this->formatEndpoint(
-                    $template,
-                    $service,
-                    $region,
-                    $dnsSuffix
-                ),
+                $template,
+                $service,
+                $region,
+                $dnsSuffix
+            ),
             'signatureVersion' => $this->getSignatureVersion($data),
             'signingRegion' => isset($data['credentialScope']['region'])
                 ? $data['credentialScope']['region']
@@ -228,7 +229,8 @@ final class Partition implements ArrayAccess, PartitionInterface
     {
         return $service === 'sts'
             && in_array($region, $this->stsLegacyGlobalRegions)
-            && (empty($options['sts_regional_endpoints'])
+            && (
+                empty($options['sts_regional_endpoints'])
                 || ConfigurationProvider::unwrap(
                     $options['sts_regional_endpoints']
                 )->getEndpointsType() !== 'regional'
@@ -248,7 +250,8 @@ final class Partition implements ArrayAccess, PartitionInterface
     {
         return $service === 's3'
             && $region === 'us-east-1'
-            && (empty($options['s3_us_east_1_regional_endpoint'])
+            && (
+                empty($options['s3_us_east_1_regional_endpoint'])
                 || S3ConfigurationProvider::unwrap(
                     $options['s3_us_east_1_regional_endpoint']
                 )->getEndpointsType() !== 'regional'
@@ -287,12 +290,18 @@ final class Partition implements ArrayAccess, PartitionInterface
     {
         $variantTags = [];
         if (isset($options['use_fips_endpoint'])) {
-            if ($options['use_fips_endpoint']->isUseFipsEndpoint()) {
+            $useFips = $options['use_fips_endpoint'];
+            if (is_bool($useFips)) {
+                $useFips && $variantTags[] = 'fips';
+            } elseif ($useFips->isUseFipsEndpoint()) {
                 $variantTags[] = 'fips';
             }
         }
         if (isset($options['use_dual_stack_endpoint'])) {
-            if ($options['use_dual_stack_endpoint']->isUseDualStackEndpoint()) {
+            $useDualStack = $options['use_dual_stack_endpoint'];
+            if (is_bool($useDualStack)) {
+                $useDualStack && $variantTags[] = 'dualstack';
+            } elseif ($useDualStack->isUseDualStackEndpoint()) {
                 $variantTags[] = 'dualstack';
             }
         }

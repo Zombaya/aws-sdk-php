@@ -24,7 +24,7 @@
         "ext-pcre": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
-        "aws/aws-crt-php": "^1.0.2"
+        "aws/aws-crt-php": "^1.0.4"
     },
     "require-dev": {
         "composer/composer" : "^1.10.22",
@@ -44,6 +44,10 @@
         "sebastian/comparator": "^1.2.3 || ^4.0",
         "yoast/phpunit-polyfills": "^1.0",
         "dms/phpunit-arraysubset-asserts": "^0.4.0"
+    },
+    "scripts": {
+        "install-cs-fix": "@composer install --working-dir=tools/php-cs-fixer",
+        "cs-fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -v"
     },
     "suggest": {
         "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
@@ -70,3 +74,4 @@
         }
     }
 }
+

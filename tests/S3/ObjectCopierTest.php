@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\S3;
 
 use Aws\Command;
@@ -76,8 +77,8 @@ class ObjectCopierTest extends TestCase
         ]);
         $client->getHandlerList()->appendSign(Middleware::tap(
             function (CommandInterface $cmd, RequestInterface $req) {
-
                 switch($cmd->getName()) {
+                    case 'UploadPartCopy':
                     case 'CopyObject':
                         $this->assertEquals(
                             'mydest-123456789012.s3-accesspoint.us-west-2.amazonaws.com',
@@ -89,11 +90,11 @@ class ObjectCopierTest extends TestCase
                             $cmd['Bucket']
                         );
                         $this->assertEquals(
-                            '/arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/sourceKey',
+                            'arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/object/sourceKey',
                             $cmd['CopySource']
                         );
                         $this->assertEquals(
-                            '/arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/sourceKey',
+                            'arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/object/sourceKey',
                             $req->getHeader('x-amz-copy-source')[0]
                         );
                         break;
@@ -111,26 +112,6 @@ class ObjectCopierTest extends TestCase
                         );
                         break;
 
-                    case 'UploadPartCopy':
-                        $this->assertEquals(
-                            'mydest-123456789012.s3-accesspoint.us-west-2.amazonaws.com',
-                            $req->getUri()->getHost()
-                        );
-                        $this->assertEquals('/destKey', $req->getUri()->getPath());
-                        $this->assertEquals(
-                            'arn:aws:s3:us-west-2:123456789012:accesspoint:mydest',
-                            $cmd['Bucket']
-                        );
-                        $this->assertEquals(
-                            '/arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/sourceKey',
-                            $cmd['CopySource']
-                        );
-                        $this->assertEquals(
-                            '/arn:aws:s3:us-west-2:123456789012:accesspoint:mysource/sourceKey',
-                            $req->getHeader('x-amz-copy-source')[0]
-                        );
-                        break;
-
                     case 'HeadObject':
                         $this->assertEquals(
                             'mysource-123456789012.s3-accesspoint.us-west-2.amazonaws.com',
@@ -141,7 +122,6 @@ class ObjectCopierTest extends TestCase
 
                     default:
                         $this->fail('Unexpected command encountered.');
-
                 }
 
                 return Promise\Create::promiseFor(new Result([]));
@@ -308,7 +288,7 @@ class ObjectCopierTest extends TestCase
                     $headObjectCommand,
                     Promise\Create::promiseFor(new Result(['ContentLength' => 1024 * 1024 * 6]))
                 ],
-                [$copyObjectCommand, Promise\Create::promiseFor(new Result)],
+                [$copyObjectCommand, Promise\Create::promiseFor(new Result())],
             ]));
 
         (new ObjectCopier(
@@ -325,10 +305,10 @@ class ObjectCopierTest extends TestCase
         $client = $this->getTestClient('s3');
         $copyOptions = [
             'params'          => ['RequestPayer' => 'test'],
-            'before_lookup'   => function($command) {
+            'before_lookup'   => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_upload'   => function($command) {
+            'before_upload'   => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
         ];
@@ -344,7 +324,8 @@ class ObjectCopierTest extends TestCase
             ['Bucket' => 'sourceBucket', 'Key' => 'sourceKey'],
             ['Bucket' => 'bucket', 'Key' => 'key'],
             'private',
-            $copyOptions);
+            $copyOptions
+        );
         $this->assertFalse($this->mockQueueEmpty());
         $result = $uploader->copy();
 
@@ -359,16 +340,16 @@ class ObjectCopierTest extends TestCase
         $copyOptions = [
             'mup_threshold'   => MultipartUploader::PART_MIN_SIZE,
             'params'          => ['RequestPayer' => 'test'],
-            'before_lookup'   => function($command) {
+            'before_lookup'   => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_initiate' => function($command) {
+            'before_initiate' => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_upload'   => function($command) {
+            'before_upload'   => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_complete' => function($command) {
+            'before_complete' => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             }
         ];
@@ -384,7 +365,8 @@ class ObjectCopierTest extends TestCase
             ['Bucket' => 'sourceBucket', 'Key' => 'sourceKey'],
             ['Bucket' => 'bucket', 'Key' => 'key'],
             'private',
-            $copyOptions);
+            $copyOptions
+        );
         $this->assertFalse($this->mockQueueEmpty());
         $result = $uploader->copy();
 
@@ -417,7 +399,8 @@ class ObjectCopierTest extends TestCase
         $this->assertSame($url, $result['ObjectURL']);
     }
 
-    public function MultipartCopierProvider(){
+    public function MultipartCopierProvider()
+    {
         return [
             ["中文", "%E4%B8%AD%E6%96%87"],
             ["文件夹/文件", "%E6%96%87%E4%BB%B6%E5%A4%B9/%E6%96%87%E4%BB%B6"],

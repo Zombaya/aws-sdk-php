@@ -1,6 +1,8 @@
 <?php
+
 namespace Aws\Test\S3;
 
+use Aws\Middleware;
 use Aws\S3\MultipartUploader;
 use Aws\Result;
 use Aws\S3\S3Client;
@@ -85,8 +87,11 @@ class MultipartUploaderTest extends TestCase
                 [],
                 ['part_size' => 1] + $defaults,
                 Psr7\FnStream::decorate(
-                    Psr7\Utils::streamFor($data), [
-                        'getSize' => function () {return null;}
+                    Psr7\Utils::streamFor($data),
+                    [
+                        'getSize' => function () {
+                            return null;
+                        }
                     ]
                 ),
                 'InvalidArgumentException'
@@ -162,21 +167,32 @@ class MultipartUploaderTest extends TestCase
     {
         /** @var \Aws\S3\S3Client $client */
         $client = $this->getTestClient('s3');
+        $client->getHandlerList()->appendSign(
+            Middleware::tap(function ($cmd, $req) {
+                $name = $cmd->getName();
+                if ($name === 'UploadPart') {
+                    $this->assertTrue(
+                        $req->hasHeader('Content-MD5')
+                    );
+                }
+            })
+        );
         $uploadOptions = [
             'bucket'          => 'foo',
             'key'             => 'bar',
+            'add_content_md5' => true,
             'params'          => [
                 'RequestPayer'  => 'test',
                 'ContentLength' => $size
             ],
-            'before_initiate' => function($command) {
+            'before_initiate' => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_upload'   => function($command) use ($size) {
+            'before_upload'   => function ($command) use ($size) {
                 $this->assertLessThan($size, $command['ContentLength']);
                 $this->assertSame('test', $command['RequestPayer']);
             },
-            'before_complete' => function($command) {
+            'before_complete' => function ($command) {
                 $this->assertSame('test', $command['RequestPayer']);
             }
         ];
@@ -242,7 +258,7 @@ class MultipartUploaderTest extends TestCase
             'bucket'          => 'foo',
             'key'             => 'bar',
             'params'          => $params,
-            'before_initiate' => function($command) use ($expectedContentType) {
+            'before_initiate' => function ($command) use ($expectedContentType) {
                 $this->assertEquals(
                     $expectedContentType,
                     $command['ContentType']

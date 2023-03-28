@@ -1,6 +1,7 @@
 build/ export-ignore
 docs/ export-ignore
 tests/ export-ignore
+tools/ export-ignore
 features/ export-ignore
 vendor/ export-ignore
 .gitattributes export-ignore
@@ -13,12 +14,14 @@ composer.lock export-ignore
 CONTRIBUTING.md export-ignore
 Makefile export-ignore
 phpunit.xml.dist export-ignore
+.php-cs-fixer.dist.php export-ignore
 README.md export-ignore
 UPGRADING.md export-ignore
 src/data/*.json export-ignore
 src/data/*/*/*.json export-ignore
 src/data/*/*/docs*.json.php export-ignore
 src/data/*/*/examples*.json.php export-ignore
+src/data/*/*/endpoint-tests*.json.php export-ignore
 codecov.yml export-ignore
 .changes export-ignore
 .github export-ignore

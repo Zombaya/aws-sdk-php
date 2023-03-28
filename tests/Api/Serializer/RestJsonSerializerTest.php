@@ -1,9 +1,12 @@
 <?php
+
 namespace Aws\Test\Api\Serializer;
 
 use Aws\Api\Service;
 use Aws\Command;
 use Aws\Api\Serializer\RestJsonSerializer;
+use Aws\EndpointV2\EndpointDefinitionProvider;
+use Aws\EndpointV2\EndpointProviderV2;
 use Aws\Test\UsesServiceTrait;
 use Yoast\PHPUnitPolyfills\TestCases\TestCase;
 
@@ -21,7 +24,8 @@ class RestJsonSerializerTest extends TestCase
                 'metadata'=> [
                     'targetPrefix' => 'test',
                     'jsonVersion' => '1.1',
-                    'protocol' => 'rest-json'
+                    'protocol' => 'rest-json',
+                    'serviceIdentifier' => 'foo'
                 ],
                 'operations' => [
                     'foo' => [
@@ -137,7 +141,8 @@ class RestJsonSerializerTest extends TestCase
                     'BoolShape' => ['type' => 'boolean'],
                 ]
             ],
-            function () {}
+            function () {
+            }
         );
     }
 
@@ -260,7 +265,8 @@ class RestJsonSerializerTest extends TestCase
     }
 
 
-    public function doctypeTestProvider() {
+    public function doctypeTestProvider()
+    {
         return [
             [
                 ['DocumentValue' =>
@@ -299,7 +305,8 @@ class RestJsonSerializerTest extends TestCase
      * @param string $operation
      * @param string $input
      */
-    public function testRestJsonContentTypeNoPayload($operation, $input) {
+    public function testRestJsonContentTypeNoPayload($operation, $input)
+    {
         $request = $this->getRequest($operation, $input);
         $this->assertSame('http://foo.com/', (string) $request->getUri());
         $this->assertSame("", $request->getBody()->getContents());
@@ -311,7 +318,8 @@ class RestJsonSerializerTest extends TestCase
     }
 
 
-    public function restJsonContentTypeProvider() {
+    public function restJsonContentTypeProvider()
+    {
         return [
             [
                 "noPayload", ['baz' => 'bar'],
@@ -333,11 +341,26 @@ class RestJsonSerializerTest extends TestCase
         $this->assertSame($expected, $request->getHeaderLine('Is-Bool'));
     }
 
-    public function boolProvider() {
+    public function boolProvider()
+    {
         return [
             [true, 'true'],
             [false, 'false']
         ];
     }
-}
 
+    public function testDoesNotOverrideScheme()
+    {
+        $serializer = new RestJsonSerializer($this->getTestService(), 'http://foo.com');
+        $cmd = new Command('foo', ['baz' => 'bar']);
+        $endpointProvider = new EndpointProviderV2(
+            json_decode(
+                file_get_contents(__DIR__ . '/../../EndpointV2/valid-rules/aws-region.json'),
+                true
+            ),
+            EndpointDefinitionProvider::getPartitions()
+        );
+        $request = $serializer($cmd, $endpointProvider, ['Region' => 'us-east-1']);
+        $this->assertSame('http://us-east-1.amazonaws.com/', (string) $request->getUri());
+    }
+}

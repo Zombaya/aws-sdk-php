@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\ConfigService;
 
 use Aws\AwsClient;
@@ -126,6 +127,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getOrganizationCustomRulePolicyAsync(array $args = [])
  * @method \Aws\Result getResourceConfigHistory(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getResourceConfigHistoryAsync(array $args = [])
+ * @method \Aws\Result getResourceEvaluationSummary(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getResourceEvaluationSummaryAsync(array $args = [])
  * @method \Aws\Result getStoredQuery(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getStoredQueryAsync(array $args = [])
  * @method \Aws\Result listAggregateDiscoveredResources(array $args = [])
@@ -134,6 +137,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listConformancePackComplianceScoresAsync(array $args = [])
  * @method \Aws\Result listDiscoveredResources(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listDiscoveredResourcesAsync(array $args = [])
+ * @method \Aws\Result listResourceEvaluations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listResourceEvaluationsAsync(array $args = [])
  * @method \Aws\Result listStoredQueries(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listStoredQueriesAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
@@ -178,6 +183,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise startConfigurationRecorderAsync(array $args = [])
  * @method \Aws\Result startRemediationExecution(array $args = [])
  * @method \GuzzleHttp\Promise\Promise startRemediationExecutionAsync(array $args = [])
+ * @method \Aws\Result startResourceEvaluation(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise startResourceEvaluationAsync(array $args = [])
  * @method \Aws\Result stopConfigurationRecorder(array $args = [])
  * @method \GuzzleHttp\Promise\Promise stopConfigurationRecorderAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
@@ -185,4 +192,6 @@ use Aws\AwsClient;
  * @method \Aws\Result untagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise untagResourceAsync(array $args = [])
  */
-class ConfigServiceClient extends AwsClient {}
+class ConfigServiceClient extends AwsClient
+{
+}

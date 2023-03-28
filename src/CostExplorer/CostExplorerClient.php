@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\CostExplorer;
 
 use Aws\AwsClient;
@@ -59,10 +60,14 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listCostAllocationTagsAsync(array $args = [])
  * @method \Aws\Result listCostCategoryDefinitions(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listCostCategoryDefinitionsAsync(array $args = [])
+ * @method \Aws\Result listSavingsPlansPurchaseRecommendationGeneration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listSavingsPlansPurchaseRecommendationGenerationAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result provideAnomalyFeedback(array $args = [])
  * @method \GuzzleHttp\Promise\Promise provideAnomalyFeedbackAsync(array $args = [])
+ * @method \Aws\Result startSavingsPlansPurchaseRecommendationGeneration(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise startSavingsPlansPurchaseRecommendationGenerationAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result untagResource(array $args = [])
@@ -76,4 +81,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateCostCategoryDefinition(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateCostCategoryDefinitionAsync(array $args = [])
  */
-class CostExplorerClient extends AwsClient {}
+class CostExplorerClient extends AwsClient
+{
+}

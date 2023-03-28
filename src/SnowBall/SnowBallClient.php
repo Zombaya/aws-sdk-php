@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\SnowBall;
 
 use Aws\AwsClient;
@@ -47,6 +48,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listJobsAsync(array $args = [])
  * @method \Aws\Result listLongTermPricing(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listLongTermPricingAsync(array $args = [])
+ * @method \Aws\Result listServiceVersions(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listServiceVersionsAsync(array $args = [])
  * @method \Aws\Result updateCluster(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateClusterAsync(array $args = [])
  * @method \Aws\Result updateJob(array $args = [])
@@ -56,4 +59,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateLongTermPricing(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateLongTermPricingAsync(array $args = [])
  */
-class SnowBallClient extends AwsClient {}
+class SnowBallClient extends AwsClient
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\ChimeSDKMessaging;
 
 use Aws\AwsClient;
@@ -33,6 +34,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise deleteChannelMessageAsync(array $args = [])
  * @method \Aws\Result deleteChannelModerator(array $args = [])
  * @method \GuzzleHttp\Promise\Promise deleteChannelModeratorAsync(array $args = [])
+ * @method \Aws\Result deleteMessagingStreamingConfigurations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise deleteMessagingStreamingConfigurationsAsync(array $args = [])
  * @method \Aws\Result describeChannel(array $args = [])
  * @method \GuzzleHttp\Promise\Promise describeChannelAsync(array $args = [])
  * @method \Aws\Result describeChannelBan(array $args = [])
@@ -57,6 +60,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getChannelMessageStatusAsync(array $args = [])
  * @method \Aws\Result getMessagingSessionEndpoint(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getMessagingSessionEndpointAsync(array $args = [])
+ * @method \Aws\Result getMessagingStreamingConfigurations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getMessagingStreamingConfigurationsAsync(array $args = [])
  * @method \Aws\Result listChannelBans(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listChannelBansAsync(array $args = [])
  * @method \Aws\Result listChannelFlows(array $args = [])
@@ -79,8 +84,12 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listSubChannelsAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
+ * @method \Aws\Result putChannelExpirationSettings(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise putChannelExpirationSettingsAsync(array $args = [])
  * @method \Aws\Result putChannelMembershipPreferences(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putChannelMembershipPreferencesAsync(array $args = [])
+ * @method \Aws\Result putMessagingStreamingConfigurations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise putMessagingStreamingConfigurationsAsync(array $args = [])
  * @method \Aws\Result redactChannelMessage(array $args = [])
  * @method \GuzzleHttp\Promise\Promise redactChannelMessageAsync(array $args = [])
  * @method \Aws\Result searchChannels(array $args = [])
@@ -100,4 +109,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateChannelReadMarker(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateChannelReadMarkerAsync(array $args = [])
  */
-class ChimeSDKMessagingClient extends AwsClient {}
+class ChimeSDKMessagingClient extends AwsClient
+{
+}

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\PrivateNetworks;
 
 use Aws\AwsClient;
@@ -47,6 +48,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result ping(array $args = [])
  * @method \GuzzleHttp\Promise\Promise pingAsync(array $args = [])
+ * @method \Aws\Result startNetworkResourceUpdate(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise startNetworkResourceUpdateAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result untagResource(array $args = [])
@@ -56,4 +59,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateNetworkSitePlan(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateNetworkSitePlanAsync(array $args = [])
  */
-class PrivateNetworksClient extends AwsClient {}
+class PrivateNetworksClient extends AwsClient
+{
+}

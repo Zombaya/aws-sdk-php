@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws;
 
 use GuzzleHttp\Psr7\StreamDecoratorTrait;
@@ -10,6 +11,9 @@ use Psr\Http\Message\StreamInterface;
 class HashingStream implements StreamInterface
 {
     use StreamDecoratorTrait;
+
+    /** @var StreamInterface */
+    private $stream;
 
     /** @var HashInterface */
     private $hash;

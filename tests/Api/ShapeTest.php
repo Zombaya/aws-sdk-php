@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Api;
 
 use Aws\Api\Shape;
@@ -78,5 +79,24 @@ class ShapeTest extends TestCase
         $m = new \ReflectionMethod($s, 'shapeAt');
         $m->setAccessible(true);
         $m->invoke($s, 'foo');
+    }
+
+    public function testGetContextParam()
+    {
+        $s = new Shape(
+            [
+                'foo' => [
+                    'shape' => 'bar',
+                ],
+                'contextParam' => [
+                    'name' => 'Baz'
+                ]
+            ],
+            new ShapeMap(['bar' => ['type' => 'string']])
+        );
+        $this->assertEquals(
+            ['name' => 'Baz'],
+            $s->getContextParam()
+        );
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\RecycleBin;
 
 use Aws\AwsClient;
@@ -15,11 +16,17 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listRulesAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
+ * @method \Aws\Result lockRule(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise lockRuleAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
+ * @method \Aws\Result unlockRule(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise unlockRuleAsync(array $args = [])
  * @method \Aws\Result untagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise untagResourceAsync(array $args = [])
  * @method \Aws\Result updateRule(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateRuleAsync(array $args = [])
  */
-class RecycleBinClient extends AwsClient {}
+class RecycleBinClient extends AwsClient
+{
+}

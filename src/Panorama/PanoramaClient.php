@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Panorama;
 
 use Aws\AwsClient;
@@ -65,6 +66,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise registerPackageVersionAsync(array $args = [])
  * @method \Aws\Result removeApplicationInstance(array $args = [])
  * @method \GuzzleHttp\Promise\Promise removeApplicationInstanceAsync(array $args = [])
+ * @method \Aws\Result signalApplicationInstanceNodeInstances(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise signalApplicationInstanceNodeInstancesAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result untagResource(array $args = [])
@@ -72,4 +75,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateDeviceMetadata(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateDeviceMetadataAsync(array $args = [])
  */
-class PanoramaClient extends AwsClient {}
+class PanoramaClient extends AwsClient
+{
+}

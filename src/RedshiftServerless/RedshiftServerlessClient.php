@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\RedshiftServerless;
 
 use Aws\AwsClient;
@@ -41,6 +42,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getResourcePolicyAsync(array $args = [])
  * @method \Aws\Result getSnapshot(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getSnapshotAsync(array $args = [])
+ * @method \Aws\Result getTableRestoreStatus(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getTableRestoreStatusAsync(array $args = [])
  * @method \Aws\Result getUsageLimit(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getUsageLimitAsync(array $args = [])
  * @method \Aws\Result getWorkgroup(array $args = [])
@@ -53,6 +56,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listRecoveryPointsAsync(array $args = [])
  * @method \Aws\Result listSnapshots(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listSnapshotsAsync(array $args = [])
+ * @method \Aws\Result listTableRestoreStatus(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listTableRestoreStatusAsync(array $args = [])
  * @method \Aws\Result listTagsForResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listTagsForResourceAsync(array $args = [])
  * @method \Aws\Result listUsageLimits(array $args = [])
@@ -65,6 +70,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise restoreFromRecoveryPointAsync(array $args = [])
  * @method \Aws\Result restoreFromSnapshot(array $args = [])
  * @method \GuzzleHttp\Promise\Promise restoreFromSnapshotAsync(array $args = [])
+ * @method \Aws\Result restoreTableFromSnapshot(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise restoreTableFromSnapshotAsync(array $args = [])
  * @method \Aws\Result tagResource(array $args = [])
  * @method \GuzzleHttp\Promise\Promise tagResourceAsync(array $args = [])
  * @method \Aws\Result untagResource(array $args = [])
@@ -80,4 +87,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateWorkgroup(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateWorkgroupAsync(array $args = [])
  */
-class RedshiftServerlessClient extends AwsClient {}
+class RedshiftServerlessClient extends AwsClient
+{
+}

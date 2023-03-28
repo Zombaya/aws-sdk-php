@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\LakeFormation;
 
 use Aws\AwsClient;
@@ -35,6 +36,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise describeTransactionAsync(array $args = [])
  * @method \Aws\Result extendTransaction(array $args = [])
  * @method \GuzzleHttp\Promise\Promise extendTransactionAsync(array $args = [])
+ * @method \Aws\Result getDataCellsFilter(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getDataCellsFilterAsync(array $args = [])
  * @method \Aws\Result getDataLakeSettings(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getDataLakeSettingsAsync(array $args = [])
  * @method \Aws\Result getEffectivePermissionsForPath(array $args = [])
@@ -87,6 +90,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise startQueryPlanningAsync(array $args = [])
  * @method \Aws\Result startTransaction(array $args = [])
  * @method \GuzzleHttp\Promise\Promise startTransactionAsync(array $args = [])
+ * @method \Aws\Result updateDataCellsFilter(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise updateDataCellsFilterAsync(array $args = [])
  * @method \Aws\Result updateLFTag(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateLFTagAsync(array $args = [])
  * @method \Aws\Result updateResource(array $args = [])
@@ -96,4 +101,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateTableStorageOptimizer(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateTableStorageOptimizerAsync(array $args = [])
  */
-class LakeFormationClient extends AwsClient {}
+class LakeFormationClient extends AwsClient
+{
+}

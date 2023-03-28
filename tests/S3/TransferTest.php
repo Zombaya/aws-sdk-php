@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\S3;
 
 use Aws\CommandInterface;
@@ -79,7 +80,7 @@ class TransferTest extends TestCase
     {
         $s3 = $this->getTestClient('s3');
         $s3->getHandlerList()->appendSign(
-            $this->mockResult(function() {
+            $this->mockResult(function () {
                 return new Result();
             }),
             's3.test'
@@ -122,6 +123,15 @@ class TransferTest extends TestCase
             new Result(['UploadId' => '123']),
         ]);
 
+        $s3->getHandlerList()->appendSign(Middleware::tap(
+            function (CommandInterface $cmd, RequestInterface $req) {
+                $name = $cmd->getName();
+                if ($name === 'UploadPart') {
+                    $this->assertTrue(isset($command['ContentMD5']));
+                }
+            }
+        ));
+
         $dir = sys_get_temp_dir() . '/unittest';
         `rm -rf $dir`;
         mkdir($dir);
@@ -136,7 +146,8 @@ class TransferTest extends TestCase
         $res = fopen('php://temp', 'r+');
         $t = new Transfer($s3, $dir, 's3://foo/bar', [
             'mup_threshold' => 5248000,
-            'debug' => $res
+            'debug' => $res,
+            'add_content_md5' => true
         ]);
 
         $t->transfer();
@@ -305,7 +316,8 @@ class TransferTest extends TestCase
         `rm -rf $dir`;
     }
 
-    public function providedPathsOutsideTarget() {
+    public function providedPathsOutsideTarget()
+    {
         return [
             ['bar/../a/b'],
             //ensures if path resolves to target directory
@@ -323,7 +335,9 @@ class TransferTest extends TestCase
         $s3 = $this->getMockS3Client();
         $filesInDirectory = array_filter(
             iterator_to_array(\Aws\recursive_dir_iterator(__DIR__)),
-            function ($path) { return !is_dir($path); }
+            function ($path) {
+                return !is_dir($path);
+            }
         );
 
         $s3->expects($this->exactly(count($filesInDirectory)))
@@ -347,7 +361,9 @@ class TransferTest extends TestCase
         $s3 = $this->getMockS3Client();
         $justThisFile = array_filter(
             iterator_to_array(\Aws\recursive_dir_iterator(__DIR__)),
-            function ($path) { return $path === __FILE__; }
+            function ($path) {
+                return $path === __FILE__;
+            }
         );
 
         $s3->expects($this->once())

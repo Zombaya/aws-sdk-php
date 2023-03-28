@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test\Integ;
 
 use Aws\S3\Exception\S3Exception;
@@ -12,7 +13,7 @@ use Aws\S3\PostObject;
 use Aws\S3\PostObjectV4;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
-use PHPUnit_Framework_Assert as Assert;
+use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -68,12 +69,12 @@ class S3Context implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @BeforeFeature
+     * @BeforeSuite
      */
     public static function createTestBucket()
     {
         $client = self::getSdk()->createS3();
-        if (!$client->doesBucketExist(self::getResourceName())) {
+        if (!$client->doesBucketExistV2(self::getResourceName())) {
             $client->createBucket(['Bucket' => self::getResourceName()]);
             $client->waitUntil('BucketExists', [
                 'Bucket' => self::getResourceName(),
@@ -82,7 +83,7 @@ class S3Context implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @AfterFeature
+     * @AfterSuite
      */
     public static function deleteTestBucket()
     {
@@ -129,7 +130,7 @@ class S3Context implements Context, SnippetAcceptingContext
         $logBucket = self::INTEG_LOG_BUCKET_PREFIX . "-{$identity['Account']}";
 
         // Log bucket deletion result
-        if (!($client->doesBucketExist($logBucket))) {
+        if (!($client->doesBucketExistV2($logBucket))) {
             $client->createBucket([
                 'Bucket' => $logBucket
             ]);
@@ -194,7 +195,7 @@ class S3Context implements Context, SnippetAcceptingContext
      */
     public function iSendThePreSignedRequest()
     {
-        (new Client)->send($this->presignedRequest);
+        (new Client())->send($this->presignedRequest);
     }
 
     /**
@@ -223,32 +224,6 @@ class S3Context implements Context, SnippetAcceptingContext
         foreach ($table as $row) {
             $this->formInputs += [$row['key'] => $row['value']];
         }
-    }
-
-    /**
-     * @Given I provide a json string policy as following:
-     */
-    public function iProvideAJsonStringPolicyAsFollowing(PyStringNode $string)
-    {
-        $policy = json_decode($string->getRaw(),true);
-        $policy['conditions'][] = ["bucket" => self::getResourceName()];
-        $policy['conditions'][] = ["starts-with", '$key', ""];
-
-        $this->jsonPolicy = json_encode($policy);
-    }
-
-    /**
-     * @When I create a POST object SigV2 with inputs and policy
-     */
-    public function iCreateAPostObjectSigvWithInputsAndPolicy()
-    {
-        $postObject = new PostObject(
-            $this->s3Client,
-            self::getResourceName(),
-            $this->formInputs,
-            $this->jsonPolicy
-        );
-        $this->preparePostData($postObject);
     }
 
     /**
@@ -295,7 +270,7 @@ class S3Context implements Context, SnippetAcceptingContext
     public function iMakeAHttpPostRequest()
     {
         try {
-            (new Client)->request(
+            (new Client())->request(
                 $this->attributes['method'],
                 $this->attributes['action'],
                 [

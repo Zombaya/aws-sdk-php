@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Iot;
 
 use Aws\AwsClient;
@@ -338,6 +339,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listProvisioningTemplateVersionsAsync(array $args = [])
  * @method \Aws\Result listProvisioningTemplates(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listProvisioningTemplatesAsync(array $args = [])
+ * @method \Aws\Result listRelatedResourcesForAuditFinding(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise listRelatedResourcesForAuditFindingAsync(array $args = [])
  * @method \Aws\Result listRoleAliases(array $args = [])
  * @method \GuzzleHttp\Promise\Promise listRoleAliasesAsync(array $args = [])
  * @method \Aws\Result listScheduledAudits(array $args = [])
@@ -481,4 +484,6 @@ use Aws\AwsClient;
  * @method \Aws\Result validateSecurityProfileBehaviors(array $args = [])
  * @method \GuzzleHttp\Promise\Promise validateSecurityProfileBehaviorsAsync(array $args = [])
  */
-class IotClient extends AwsClient {}
+class IotClient extends AwsClient
+{
+}

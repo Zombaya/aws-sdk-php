@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Emr;
 
 use Aws\AwsClient;
@@ -46,6 +47,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getAutoTerminationPolicyAsync(array $args = [])
  * @method \Aws\Result getBlockPublicAccessConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getBlockPublicAccessConfigurationAsync(array $args = [])
+ * @method \Aws\Result getClusterSessionCredentials(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getClusterSessionCredentialsAsync(array $args = [])
  * @method \Aws\Result getManagedScalingPolicy(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getManagedScalingPolicyAsync(array $args = [])
  * @method \Aws\Result getStudioSessionMapping(array $args = [])
@@ -111,4 +114,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateStudioSessionMapping(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateStudioSessionMappingAsync(array $args = [])
  */
-class EmrClient extends AwsClient {}
+class EmrClient extends AwsClient
+{
+}

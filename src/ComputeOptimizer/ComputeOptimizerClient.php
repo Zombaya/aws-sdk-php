@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\ComputeOptimizer;
 
 use Aws\AwsClient;
@@ -15,6 +16,8 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise exportEBSVolumeRecommendationsAsync(array $args = [])
  * @method \Aws\Result exportEC2InstanceRecommendations(array $args = [])
  * @method \GuzzleHttp\Promise\Promise exportEC2InstanceRecommendationsAsync(array $args = [])
+ * @method \Aws\Result exportECSServiceRecommendations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise exportECSServiceRecommendationsAsync(array $args = [])
  * @method \Aws\Result exportLambdaFunctionRecommendations(array $args = [])
  * @method \GuzzleHttp\Promise\Promise exportLambdaFunctionRecommendationsAsync(array $args = [])
  * @method \Aws\Result getAutoScalingGroupRecommendations(array $args = [])
@@ -25,6 +28,10 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise getEC2InstanceRecommendationsAsync(array $args = [])
  * @method \Aws\Result getEC2RecommendationProjectedMetrics(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getEC2RecommendationProjectedMetricsAsync(array $args = [])
+ * @method \Aws\Result getECSServiceRecommendationProjectedMetrics(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getECSServiceRecommendationProjectedMetricsAsync(array $args = [])
+ * @method \Aws\Result getECSServiceRecommendations(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise getECSServiceRecommendationsAsync(array $args = [])
  * @method \Aws\Result getEffectiveRecommendationPreferences(array $args = [])
  * @method \GuzzleHttp\Promise\Promise getEffectiveRecommendationPreferencesAsync(array $args = [])
  * @method \Aws\Result getEnrollmentStatus(array $args = [])
@@ -42,4 +49,6 @@ use Aws\AwsClient;
  * @method \Aws\Result updateEnrollmentStatus(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateEnrollmentStatusAsync(array $args = [])
  */
-class ComputeOptimizerClient extends AwsClient {}
+class ComputeOptimizerClient extends AwsClient
+{
+}

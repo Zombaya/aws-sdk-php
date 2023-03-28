@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\Test;
 
 use Aws\Command;
@@ -28,6 +29,12 @@ class MockHandlerTest extends TestCase
         $h = new Mockhandler([new Result([]), new Result([])]);
         $h->append(new Result([]));
         $this->assertCount(3, $h);
+    }
+
+    public function testCanCountEmpty()
+    {
+        $h = new Mockhandler();
+        $this->assertCount(0, $h);
     }
 
     public function testReturnsMockResultsFromQueue()
@@ -76,7 +83,8 @@ class MockHandlerTest extends TestCase
             },
             function ($reason) use (&$thens) {
                 $thens[] = $reason;
-            });
+            }
+        );
         $r1 = new Result([]);
         $cmd = new Command('foo');
         $request = new Request('GET', 'http://www.example.com');

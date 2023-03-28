@@ -1,4 +1,5 @@
 <?php
+
 namespace Aws\SupportApp;
 
 use Aws\AwsClient;
@@ -21,7 +22,11 @@ use Aws\AwsClient;
  * @method \GuzzleHttp\Promise\Promise listSlackWorkspaceConfigurationsAsync(array $args = [])
  * @method \Aws\Result putAccountAlias(array $args = [])
  * @method \GuzzleHttp\Promise\Promise putAccountAliasAsync(array $args = [])
+ * @method \Aws\Result registerSlackWorkspaceForOrganization(array $args = [])
+ * @method \GuzzleHttp\Promise\Promise registerSlackWorkspaceForOrganizationAsync(array $args = [])
  * @method \Aws\Result updateSlackChannelConfiguration(array $args = [])
  * @method \GuzzleHttp\Promise\Promise updateSlackChannelConfigurationAsync(array $args = [])
  */
-class SupportAppClient extends AwsClient {}
+class SupportAppClient extends AwsClient
+{
+}
