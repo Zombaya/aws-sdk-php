@@ -2610,42 +2610,90 @@ class AesGcmTest extends TestCase
     /**
      * Test compatibility with OpenSSL
      *
+     * @dataProvider testCompatProvider
      * @throws \Exception
      */
-    public function testCompat()
+    public function testCompat($plaintext, $aad, $key, $nonce)
     {
         if (PHP_VERSION_ID < 70100) {
             $this->markTestSkipped('This test can only run on PHP 7.1');
             return;
         }
-        $ptLen = \random_int(0, 1024);
-        $aadLen = \random_int(0, 1024);
-        $i = 0;
-        $tag1 = $tag2 = '';
-        for ($i = 0; $i < 16; ++$i) {
-            $plaintext = \random_bytes($ptLen + $i);
-            $aad = \random_bytes($aadLen + $i);
-            $key = \random_bytes(32);
-            $nonce = \random_bytes(12);
 
-            $exp = \openssl_encrypt(
-                $plaintext,
-                'aes-256-gcm',
-                $key,
-                OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,
-                $nonce,
-                $tag1,
-                $aad
-            );
-            $got = AesGcm::encrypt(
-                $plaintext,
-                $nonce,
-                new Key($key),
-                $aad,
-                $tag2
-            );
-            $this->assertSame(bin2hex($exp), bin2hex($got));
-            $this->assertSame(bin2hex($tag1), bin2hex($tag2));
+        $tag1 = $tag2 = '';
+
+        $exp = \openssl_encrypt(
+            $plaintext,
+            'aes-256-gcm',
+            $key,
+            OPENSSL_RAW_DATA | OPENSSL_NO_PADDING,
+            $nonce,
+            $tag1,
+            $aad
+        );
+        $got = AesGcm::encrypt(
+            $plaintext,
+            $nonce,
+            new Key($key),
+            $aad,
+            $tag2
+        ).\random_bytes(2);
+
+        $failureMessage = sprintf("Failed with parameters:\n\tplaintext: '%s'\n\taad: '%s'\n\tkey: '%s'\n\tnonce: '%s'",
+            bin2hex($plaintext),
+            bin2hex($aad),
+            bin2hex($key),
+            bin2hex($nonce)
+        );
+
+        $this->assertSame(bin2hex($exp), bin2hex($got),$failureMessage);
+        $this->assertSame(bin2hex($tag1), bin2hex($tag2),$failureMessage);
+    }
+
+    public function testCompatProvider()
+    {
+        $tests = [];
+
+        $ptLen  = \random_int(0, 1024);
+        $aadLen = \random_int(0, 1024);
+
+        $tests['empty-plaintext'] = [
+            '',
+            \random_bytes($aadLen + 1),
+            \random_bytes(32),
+            \random_bytes(12),
+        ];
+        $tests['empty-aad'] = [
+            \random_bytes($ptLen + 1),
+            '',
+            \random_bytes(32),
+            \random_bytes(12),
+        ];
+        $tests['empty-aad-and-plaintext'] = [
+            '',
+            '',
+            \random_bytes(32),
+            \random_bytes(12),
+        ];
+
+        for ($ptLen = 0; $ptLen < 1040; ++$ptLen) {
+            for ($aadLen = 0; $aadLen < 1040; ++$aadLen) {
+                $plaintext = $ptLen > 0 ? \random_bytes($ptLen) : '';
+                $aad = $aadLen > 0 ?\random_bytes($aadLen) : '';
+                $key = \random_bytes(32);
+                $nonce = \random_bytes(12);
+
+                $testName = sprintf('%d-%d',$ptLen,$aadLen);
+
+                $tests[$testName] = [
+                    $plaintext,
+                    $aad,
+                    $key,
+                    $nonce,
+                ];
+            }
         }
+
+        return $tests;
     }
 }
